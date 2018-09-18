@@ -1,0 +1,16 @@
+1 Briefly explian why you think this assignment has asked you to code a struct, Contact, that holds three other struct as data members.
+These three stucts -- Name, Address and Numbers -- are parts of struct Contacts. Using Contacts as a parent to contain three children structs could make Contacts more like an object. 
+Name, Address and Numbers are fields/attributes of Contacts.
+
+
+
+
+2 what was the most difficult part of this assignment?
+I think the most difficult part is how to passing by address
+The string , integer,and character are different.
+
+
+
+
+3 How long did it take you to complete Milstone4?
+Almost 10 hours

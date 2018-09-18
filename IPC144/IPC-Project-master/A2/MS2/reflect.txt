@@ -1,0 +1,6 @@
+1 In 3 or 4 sentence explain the term “function” and briefly discuss the need for function in any language?
+The function looks like an independent tools, it would use several times by caller in different module.
+So it is very fast and convenience. We could not do the same work several times.
+ 
+2 Briefly explain why you think the “helper” functions are in a different module and why those functions were not included in the “contacts” module?
+Because the file’s logic “helper” is very independent. It also could use for another modules which need “yes” or “no”. It could be used for several times and different location. But the contacts is relate to construct contacts which is cell and business number or address and so on. 

@@ -1,0 +1,28 @@
+Name: Zhi Zhao
+
+Student Number:109079178
+
+Email: zzhao58@mysenaca.ca
+
+Section: GG
+
+Date:  May 29, 2018
+
+
+1) Name all the iteration constructs.
+do while
+while
+for
+
+
+2)In two or three sentences explain the different between a "do while "and a "while"loop?
+do while:The do while construct executes its sequence at least once and continues executing it as long as the test condition is true.
+(at least executing one time, if the test condition is ture, it wil  continues to execute until it doen't meet the test condition.)
+
+
+while:The while construct executes its sequence as long as the test condition is true.  
+
+
+
+3)In two or three sentences explain what is meant by the term conditional expression?
+The for construct groups the initialization, test condition and change together, separating them with semi-colons (there are three partys,the initialization, test condition and change together, separating them with semi-colons in the for construct.

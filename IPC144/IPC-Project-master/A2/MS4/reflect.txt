@@ -1,0 +1,15 @@
+3. Briefly explain how the two functions findContactIndex and getTenDigitPhone benefit your source code
+with respect to overall  maintenance and readability?
+In the code, I will use index and telephonenumbers several times,if I use modul of findContactIndex and getTenDigitPhone, 
+that will become more easy and imple. it makes my code logic more clearly. In the future if I need to change part of code,
+I only need to maintenance the function, the whole code relate to the fucntion will correct it, it's very convenience.
+
+
+
+
+
+
+
+what did you learn most from doing Assignment?
+I found the modul is very usefull and power,which could sharply save lots time and improve effevtive. Most impresstin is 
+%[^\n]is power than %s,which update the function of %s, and you should follow the clearnkeyboard() after scanf.

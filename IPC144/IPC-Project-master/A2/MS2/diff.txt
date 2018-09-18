@@ -1,0 +1,10 @@
+
+In line number 77 of your output:
+The output should be:
+*** OUT OF RANGE *** <Enter a number between 0 and 6>: 1
+But your output is: 
+*** OUT OF RANGE *** <Enter a number between 0 and 6>: 
+                                                       ^
+-------------------------------------------------------|
+Professor's character ASCII code: hex(31), dec(49)
+un-matched character ASCII code: hex(d), dec(13)

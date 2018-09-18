@@ -1,0 +1,20 @@
+Name:ZHI ZHAO
+Student number:109079178
+Email:  zzhao58@senecacollege.ca
+Section: GG
+Date:August 7, 2018
+
+1. I can incorporate multiple scanf function into one. For example, using output and  input functions as below:
+	
+	//C code
+	printf("Please enter the contact's first name, middle initial(s) and last name (using comma to seperate): \n");
+	scanf(" %30[^,], %7[^,], %35[^\n]", name.firstName, name.middleInitial, name.lastName);
+	
+	In addtion, we can provide users an array of options that may relate to what users have inputed. Users use arrows key to choose what they really need. 
+	Thus uses can type less and more accurate.
+	
+2.	For C language, it does not have a specific data tpye called "STRING". C use an array of char to reprent a string. The last element of this array is always a
+ null terminator, i.e '\0'. So C need an addtional byte to store this null terminator. For example, if a stirng has a maximum size of 20, C allocates 25 byte for actually characters and plusing
+ 1 for null terminator. Thus the total memory should be ocuupied is 26.
+	
+	
