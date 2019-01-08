@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+ <html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8" />
+	<link rel="stylesheet" href="css/normalize.css"/>
+	<link rel="stylesheet" href="css/lab3-theme.css"/>
+	<script src="js/list.js"></script>
+	
+	
+</head>
+<body>
+
+	<header>
+		<div class="center">
+			<h2>
+			     WEB222 - Assignment 3
+			</h2>
+		</div>
+	</header>
+	<nav>
+		<div class="center">
+		<ul>	
+			<li><a href="index.html">Home</a></li>
+			<li><a href="list.html">List</a></li>
+			<li><a href="table.html">Table</a></li>
+			<li><a href="image.html">Image</a></li>
+			<li><a href="audio.html">Audio</a></li>
+			<li><a href="video.html">Video</a></li>
+			<li><a href="seneca.html">Seneca</a></li>
+			<li><a href="honesty.html">Honesty</a></li>
+		</ul>
+		</div>
+		
+	</nav>
+		
+	<section class="main center">
+
+	<!-- Start your code here -->
+		<h2>HTML Lists</h2>
+		<ol>
+				<li><h3>Canada</h3>
+					<ul>
+						<li>Ontario
+							<ul>
+								<li>Toronto</li>    
+								<li>York Region</li>
+							</ul>	
+						</li>
+						
+						<li>British Columbia
+						<ul>
+							<li>Vancouver</li>
+							<li>Burnbary</li>
+						</ul>
+					    </li>
+					</ul>
+				</li>
+				<li><h3>China</h3>
+					<ul>
+						<li>Sichuan
+							<ul>
+								<li>ChengDu</li>
+								<li>LeShan</li>
+							</ul>
+						</li>
+						
+						<li>GuangDong
+							<ul>
+								<li>GuangZhou</li>
+								<li>DongGuan</li>		
+							</ul>
+						</li>
+					</ul>
+				</li>
+		</ol>
+		<div>
+			<p>This is an example of a using a div element. It also includes this <em>span</em> element.</p>
+			<p>Later we'll use a div or span like this to target content in our page with JavaScript or CSS styles.<p> 
+		</div>
+		
+		<header>
+			<h3>Fruits Order</h3>
+		</header>  
+		<div id="container1"></div>
+				
+		<header>
+			<h3>Directory</h3>
+		</header> 
+		<div id="container2"></div>	
+		<!--	
+		<script>
+			var listHTML = "";
+			
+			//recursive function
+			function arrtoHTML(arr){
+				listHTML = listHTML + "<ul>";			
+				arr.forEach(
+					function(elm){
+						if(elm.type=="file"){
+							listHTML = listHTML + ("<li>"+ elm.name + "</li>");		
+						}else{
+							listHTML = listHTML + ("<li>"+ elm.name );
+							arrtoHTML(elm.files);
+							listHTML = listHTML + "</li>";
+						}
+						
+					}
+				);
+				listHTML = listHTML + "</ul>";
+			}
+	
+			window.addEventListener(
+				'load', 
+				function() {
+					//FrutsList
+					var fruitsList = document.createElement('ol');
+	
+					//concatnate each elemtns to have <li> and </li>, 
+					//fruitsli = [ "<li>Apples</li>","<li>Oranges</li>","<li>Pears</li>","<li>Grapes</li>","<li>Pineapples</li>","<li>Mangos</li>" ];
+					var fruitsli = fruits.map(x => "<li>"+ x +"</li>");
+					
+					//join all elements to one string, i.e. "<li>Apples</li><li>Oranges</li><li>Pears</li><li>Grapes</li><li>Pineapples</li><li>Mangos</li>"
+					//insert this string to new created <ol></ol>
+					fruitsList.innerHTML = fruitsli.join("");    
+					var divContainer1 = document.querySelector('#container1');    
+					divContainer1.appendChild(fruitsList);
+					
+					//Directory
+					var divContainer2 = document.querySelector('#container2');
+					arrtoHTML(directory);
+					divContainer2.innerHTML = listHTML;
+					
+				}
+			);
+		</script>
+		 -->
+	
+	<!-- End your code here  -->
+	
+	</section>
+	<footer>
+	  <div class="center">
+		  &copy; 2017 Student Name : Zhi Zhao
+	  </div>
+	</footer>
+</body>
+</html>	  

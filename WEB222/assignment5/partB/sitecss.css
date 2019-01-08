@@ -1,0 +1,78 @@
+body {
+    padding: 20px;
+    background-color:gray;
+}
+
+.body_container{    
+    margin: 0 auto;
+    width: 98%;
+    background-color: #fcfcfc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.body_container table{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 45px;
+    margin-bottom: 45px;
+    border:solid;    
+}
+
+.titleNo{
+    width: 10%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 1em;
+    background-color: bisque;
+}
+
+.titleimg{
+    width: 20%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 1em;
+    background-color: bisque;
+}
+
+.titleclour{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: bisque;
+}
+
+.titleprice,.titlelipdes{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 1em;
+    background-color: bisque;
+}
+
+.bodyNo{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+}
+
+.bodyimg{
+    width: 20%;
+}
+
+
+.bodyimg img{
+    width:200pt;    
+}
+
+.bodycolour{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 1em;
+    background-color: chocolate;
+}
+
+.bodyprice{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 1em;
+    background-color: coral;
+}
+
+.bodydes{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 1em;
+    background-color: coral;
+}
+

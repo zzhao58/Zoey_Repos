@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+ <html lang="en">
+  <head>
+    <title>WEB222</title>
+    <meta charset="UTF-8" />
+	<link rel="stylesheet" href="css/normalize.css"/>
+	<link rel="stylesheet" href="css/lab3-theme.css"/>
+	<script src="js/table.js"></script>
+	
+</head>
+<body>
+
+	<header>
+		<div class="center">
+			<h2>
+			     WEB222 - Assignment 3
+			</h2>
+		</div>
+	</header>
+	<nav>
+		<div class="center">
+		<ul>	
+			<li><a href="index.html">Home</a></li>
+			<li><a href="list.html">List</a></li>
+			<li><a href="table.html">Table</a></li>
+			<li><a href="image.html">Image</a></li>
+			<li><a href="audio.html">Audio</a></li>
+			<li><a href="video.html">Video</a></li>
+			<li><a href="seneca.html">Seneca</a></li>
+			<li><a href="honesty.html">Honesty</a></li>
+		</ul>
+		</div>
+	</nav>
+		
+	<section class="main center">
+	
+	<!-- Start your code here -->
+		<h2>HTML Tables</h2>
+		<table style="border:1px solid;" border=1>
+			<caption><h2>Favorite Sports</h2></caption>
+			<thead>
+				<tr>
+					<th>SPORT</th>
+					<th>TIME</th>
+					<th>EQUIPMENT</th>
+				</tr>
+			</thead>
+		
+			<tbody>
+				<tr>
+					<td>RUNNING</td>
+					<td>8:00-8:30</td>
+					<td>sport shoes</td>
+				</tr>
+				<tr>
+					<td>YOGA</td>
+					<td>5:00-6:00</td>
+					<td>swimming suit</td>
+				</tr>
+				<tr>
+					<td>BASKETBALL</td>
+					<td>weekend</td>
+					<td>basketball</td>
+				</tr>
+			</tbody>
+			</table> 
+
+			<!--table2-->
+			<table style="border:1px solid;" border=1>
+				<caption><h2>Favorite Personalities</h2></caption>
+				<thead>
+					<tr>
+						<th>PERSONALITIES</th>
+						<th>AUTHOR</th>
+						<th>DESCRIPTION</th>
+					</tr>
+				</thead>
+			
+				<tbody>
+					<tr>
+						<td>OPENNING</td>
+						<td>Linda</td>
+						<td>She always like smail</td>
+					</tr>
+					<tr>
+						<td>QUIET</td>
+						<td>Lucy</td>
+						<td>she always sit on the chair without words</td>
+					</tr>
+					<tr>
+						<td>SMART</td>
+						<td>Joe</td>
+						<td>He can get A whithout class</td>
+					</tr>
+				</tbody>
+
+				<tfoot>
+					<tr>
+						<th colspan="2">Sumary</th>
+						<th>dramatic</th>
+					</tr>
+				</tfoot>
+				</table> 
+				
+				<header><h2>Users Information</h2></header>
+				<div id="usersInfo"> </div>
+				<!--
+				<script>
+					/*window.addEventListener(
+						'load', 
+						function() {
+							var table3 = document.createElement('table');
+							table3.style = "border:1px solid;";
+							table3.border = 1;
+			
+							var titleHTML = "<tr><th>First Name</th><th>Last Name</th><th>Age</th><th>Email</th></tr>";
+							var userRows = users.map( function(x) {
+								var userRow = "";	
+								userRow = "<tr>";
+								userRow = userRow + ("<td>" + x.first_name + "</td>");
+								userRow = userRow + ("<td>" + x.last_name + "</td>");
+								userRow = userRow + ("<td>" + x.age + "</td>");
+								userRow = userRow + ("<td><a href='mailto:" + x.email +"' target='_blank'>" + x.email + "</a></td>");
+								userRow = userRow + "</td>"
+								return userRow;
+								} 
+							);
+							var bodyHTML = userRows.join("");
+							var fullHTML = titleHTML + bodyHTML;								
+							
+							table3.innerHTML = fullHTML;				
+							var divContainer = document.querySelector('#usersInfo');    
+							divContainer.appendChild(table3);
+						}
+					);	
+				</script>
+				-->
+	
+	<!-- End your code here  -->
+	
+	</section>
+	<footer>
+	  <div class="center">
+		  &copy; 2017 Student Name : Zhi Zhao
+	  </div>
+	</footer>
+</body>
+</html>	  

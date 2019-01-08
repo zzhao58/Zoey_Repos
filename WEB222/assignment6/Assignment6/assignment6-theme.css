@@ -1,0 +1,19 @@
+#wholebody {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 0.1fr 0.7fr 0.2fr;
+  grid-gap:1em;
+}
+
+#navigation {
+  background-color: lime;
+}
+
+#content {
+  background-color: yellow;
+}
+
+#sidepanel {
+    background-color: bisque;
+  }
+  

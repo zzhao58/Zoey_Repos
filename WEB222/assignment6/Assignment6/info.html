@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+   <meta charset="UTF-8" />
+   <title>Zhao</title>
+   <link rel="stylesheet" href=" normalize.css "/>
+   <script src="info.js"></script>   
+</head>
+<body>
+   <div class="container">
+      <header>
+		  	<div class="header">
+					<img src="ASA.png" alt="logo" />
+				  <h1>ASA</h1>
+		  	</div>
+      </header>
+      <aside>
+        <nav>
+		    	<ul>
+			      <li> <a href="honesty.html"> Welcome </a> </li>
+			      <li><br /></li>
+			      <li> <a href="info.html"> User Information </a> </li>
+		    	</ul>
+		    </nav>
+      </aside>
+      <section class="main">
+        <article>
+          <h2>Log in</h2>
+          <form id='infoForm' action="https://httpbin.org/post" method='post' name="signup"> <br />
+            <div>
+              <label for="FirstName">First Name:</label>
+              <input type="text" name="FirstName" id="FirstName" value="" required/>
+            </div>
+            <br />
+            <div>
+              <label for="LastName">Last Name:</label>
+              <input type="text" name="LastName" id="LastName" value="" required/>
+            </div>
+		        <br />
+			    	<div>
+          		<label for="mail">E-mail:</label>
+			      	<input type="email" name="Email" id="Email" placeholder="Enter your email" required/>
+            </div> 
+            <br />
+            <div>
+              <label for="age">Age:</label>
+              <input type="text" name="age" id="age" value="" required/>
+            </div>
+            <br />
+            <div>
+              <label for="username">User Name:</label>
+              <input type="text" name="username" id="username" value="" required/>
+            </div>
+            <br />
+            <div>
+              <label for="password">Password:</label>
+              <input type="password" name="password" id="password" value="" required/>
+            </div>
+            <br />
+            <div>
+              <label for="confirmPassword">Confirm Password:</label>
+              <input type="password" name="confirmPassword" id="confirmPassword" value="" required/>
+            </div>
+            <br />
+            <div>
+              <label for="degree">Eductation Level:</label>
+              <select name="Education Level" id="degree" size="1" required >
+                <option value="" selected> - select -</option>
+                <option value="Technical"> Technical Diploma </option>
+                <option value="college"> College Diploma </option>
+                <option value="bachelor"> Bachelor's Degree  </option>
+                <option value="master"> Master's Degree </option>
+                <option value="others"> Others </option>
+              </select>    
+            </div>
+            <br />            
+		    	  Education Status:
+			      <ul>
+			      	<li><input type="radio" name="Education Status" id="status-1" value="Graduated" checked>Graduated</li>   
+			      	<li><input type="radio" name="Education Status" id="status-2" value="Current enrolled">Current enrolled</li>   
+			      	<li><input type="radio" name="Education Status" id="status-3" value="Did not graduate" >Did not graduate</li>   
+            </ul>  
+            <input type="hidden" name="lastName" id="lastName" value="Zhao" />
+            <input type="hidden" name="studentId" id="studentId" value="109079178" />     
+			  	  <br />		
+            <input type='submit' id="submitbtn" class="button1" value="Submit" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type='reset'  id="resetbtn"  class="button2" value="Clear"  />
+			    </form>
+        </article>
+      </section>
+      <aside>
+      <div class="ads" id="errors"></div>
+      </aside>
+      <footer>
+        <h2>©2018 - &lt;Zhi Zhao&gt;</h2>
+      </footer>
+   </div>
+</body>
+</html>

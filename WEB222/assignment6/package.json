@@ -1,0 +1,31 @@
+{
+  "name": "assignment6",
+  "private": true,
+  "version": "1.0.1",
+  "description": "WEB222 Assignment 6",
+  "scripts": {
+    "prevalidate:info": "shx echo \"Validating Assignment6/info.html\"",
+    "validate:info": "html-validator --verbose --validator=\"http://html5.validator.nu\" --file=\"Assignment6/info.html\"",
+    "prevalidate:honesty": "shx echo \"Validating Assignment6/honesty.html\"",
+    "validate:honesty": "html-validator --verbose --validator=\"http://html5.validator.nu\" --file=\"Assignment6/honesty.html\"",
+    "validate": "run-s validate:**",
+    "eslint": "eslint Assignment6/**/*.js",
+    "stylelint": "stylelint Assignment6/**/*.css",
+    "prettier": "prettier --single-quote es5 --write \"Assignment6/**/*.{html,css,js}\"",
+    "check": "run-s eslint stylelint validate:**",
+    "server": "http-server Assignment6",
+    "zip": "bestzip Assignment6.zip Assignment6/*",
+    "prepare-submission": "run-s prettier check zip"
+  },
+  "devDependencies": {
+    "bestzip": "^2.1.2",
+    "eslint": "^5.9.0",
+    "html-validator-cli": "^4.1.4",
+    "http-server": "^0.11.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.15.2",
+    "shx": "^0.3.2",
+    "stylelint": "^9.8.0",
+    "stylelint-config-recommended": "^2.1.0"
+  }
+}
