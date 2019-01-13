@@ -4,7 +4,7 @@ var app = express();
 
 // setup a 'route' to listen on the default url path
 app.get("/", (req, res) => {
-    res.send("This is another APP for WEB322 practice. ");
+    res.send("This is another practice!");
 });
 
 // setup http server to listen on HTTP_PORT
