@@ -1,0 +1,38 @@
+1.The difference between internal and external linkage using examples from your code
+In my code of w1.cpp has a global variable extern const int  INITIAL=3;
+but I still can use in String.cpp, this  extenal;
+
+ostream& operator<<(ostream &os, String& o_str) {
+
+		static int j = INITIAL;
+		os << j++ << ": ";
+		o_str.display(os);
+		return os;
+	}
+In this code , "static int j = INITIAL;" is a internal , J's lifetime only in String.cpp and defined internal.
+
+
+2.The execution effect of the code in the process()function that creates the String object which is inserted into 
+standand output(which member function(s) does this code call)
+
+ostream& operator<<(ostream &os, String& o_str) {
+
+		static int j = INITIAL;
+		os << j++ << ": ";
+		o_str.display(os);
+		return os;
+	}
+In process()function created a object and assigned to String "a" which is executed with helper funtion that already redefine <<.
+
+3.The changes that you made in upgrading your String class.
+String::String(const char* o_str) {
+		if (o_str != nullptr && o_str[0]!='\0') {
+			c_string = new char[strlen(o_str) + 1];
+			strcpy(c_string, o_str);
+		}
+		else {
+			c_string[0] = '\0';
+		}
+	}
+	
+because input String can have any length, we can't decide the length of String on complile time, I use "new" key word to allocate memorry for coping.
