@@ -1,0 +1,28 @@
+1 The reason for the difference between the copy and move operations?
+The most differences for them is the lifetime of move operations 
+the move operator is near the end of lifetime which it must clear after assignment.
+
+
+2 The dynamic allocation of addresses to objects instead of objects themselves?
+Rrom the result we can see: Move Constructor  0 seconds
+                            Move Assignment   0 seconds
+The new object(rvalue) point to the address instead of a object which the speed is more fast
+
+
+
+3 The changes you made in upgrading your w2 and Text modules?
+Text::Text(Text&& src) {
+		stringlines = nullptr;
+		*this = std::move(src);			
+	}
+	
+Text& Text::operator=(Text&& src) {
+		if (this != &src) {
+			delete[] stringlines;
+			string_Num = src.string_Num;
+			stringlines= src.stringlines;
+			src.string_Num = 0;
+			src.stringlines = nullptr;
+		}
+		return *this;
+	}
