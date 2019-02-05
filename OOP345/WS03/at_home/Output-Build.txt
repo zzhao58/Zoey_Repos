@@ -1,0 +1,4 @@
+﻿1>------ Build started: Project: at_home, Configuration: Debug Win32 ------
+1>w3.cpp
+1>w3_at_home.vcxproj -> C:\Zoey_Repos\OOP345\WS03\at_home\Debug\at_home.exe
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========

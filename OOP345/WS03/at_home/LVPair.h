@@ -2,7 +2,6 @@
 //Zhi Zhao(109079178)
 
 
-
 #ifndef SICT_LVPPAIR_H
 #define SICT_LVPPAIR_H
 
@@ -15,7 +14,7 @@ namespace sict {
 		L label;
 		V value;		
 	public:		
-		LVPair():label(""), value(0){};
+		LVPair() {};
 
 		LVPair(const L& p_label, const V& p_value) {
 			label = p_label;

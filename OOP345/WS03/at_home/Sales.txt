@@ -1,5 +1,5 @@
-0 Student 25
-1 Adult 13
+Student 25
+Adult 13
 Student 12
 Adult 6
 Student 5
