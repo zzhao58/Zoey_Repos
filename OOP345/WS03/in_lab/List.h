@@ -27,10 +27,12 @@
 		 void operator+=(const T& t) {
 			 if (num_element < N) {
 				 a[num_element] = t;
+				 num_element++;
 			 }
-			 num_element++;
+			 
 		 }
-		 ~List() {
+
+		 ~List(){
 			 num_element--;
 		 }
 	};

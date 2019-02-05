@@ -14,7 +14,7 @@ namespace sict {
 		T lable;
 		V value;
 	public:
-		LVPair() :lable(0), value(0) {};
+		LVPair():lable(""), value(0){};
 
 		LVPair(const T& p_label, const V& p_value) {
 			lable = p_label;
@@ -22,7 +22,7 @@ namespace sict {
 		}
 
 		void display(std::ostream& os) const {
-			os << lable << ":" << value << std::endl;
+			os << lable << " : " << value << std::endl;
 		}
 	};
 

@@ -1,85 +1,88 @@
 
 var fs = require('fs');
+var employees=[];
+var departments=[];
 
-var employees = [];
-var departments = [];
-var managers = [];
-
-module.exports.initialize = function () 
+module.exports.initialize=function()
 {
-    return new Promise(function(resolve, reject) {
-        fs.readFile("./data/employees.json", function(err, data) {
-            if (err) {
-                reject("unable to read file");
-            }
-            else { 
-                employees = JSON.parse(data);
-            }
-        });
-        
-        fs.readFile("./data/departments.json", function(err, data) {
-            if (err) {
-                reject("unable to read file");
-            }
-            else {
-                departments = JSON.parse(data);
-            }
-        });
-        resolve("operation was a success");
-    });
-}
-
-
-module.exports.getAllEmployees = function()
-{
-    return new Promise(function(resolve, reject){
-        if (employees == 0)
-        {
-            reject("no results returned");
-        }
-        else
-        {
-            resolve(employees);
-        }
+  function readFile_employees(){
+  return new Promise(function(resolve, reject){
+    fs.readFile('./data/employees.json', (err, data)=>{
+          if(err)
+          {
+              reject("Unable to read file");
+          }
+          else
+          {
+              employees = JSON.parse(data);
+              resolve(employees);
+          }
     })
-}
+  });
+ }
 
-module.exports.getManagers = function()
-{
-    
-    return new Promise(function(resolve, reject){
-       
-        for (let i=0; i < employees.length; i++)
+  function readFile_departments(){
+  return new Promise(function(resolve, reject){
+    fs.readFile('./data/departments.json', (err, data)=>{
+        if(err)
         {
-            if(employees[i].isManager == true)
-            {
-                managers[i] = employees[i];
-            }
-        }
-        
-        if (managers == 0)
-        {
-            reject("no results returned");
+          reject("Unable to read file");
         }
         else
         {
-            resolve(managers);
-        }
-    })
-}
-
-module.exports.getDepartments = function()
-{
-    return new Promise(function(resolve, reject){
-        if (departments == 0)
-        {
-            reject("no results returned");
-        }
-        else
-        {
+            departments = JSON.parse(data);
             resolve(departments);
         }
     })
+  });
+ }
+
+ return readFile_employees()
+ .then(readFile_departments);
 }
 
+
+module.exports.getAllEmployees=function(){
+    return new Promise((resolve, reject)=>{
+      if(employees.length==0)
+      {
+        reject("no results returned");
+      }
+   
+        resolve(employees); 
+    });
+  }
+
+  module.exports.getManagers=function(){
+    var managers=[];
+    
+    return new Promise((resolve, reject)=>{
+      if(employees.length!=0)
+      {      
+          employees.forEach(function(element)
+          {
+           if(element.isManager==true)
+               managers.push(element); 
+          });
+  
+         resolve(managers);    
+      }
+      else
+      {
+         reject("no results returned.");
+      }
+    });
+  }
+
+  module.exports.getDepartments=function(){
+    return new Promise((resolve, reject)=>{
+      if(departments.length ==0)
+      {
+        reject("no results returned.");
+      }
+      
+        resolve(departments);
+    });    
+  }
+    
 
