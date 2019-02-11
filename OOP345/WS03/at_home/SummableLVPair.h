@@ -48,9 +48,6 @@ namespace sict {
 
 	template<>
 	std::string SummableLVPair<std::string, std::string>::sum(const std::string& label, const std::string& sum) const {
-		/*if(sum.length() == 0)
-			return (label == this->label) ? this->value : sum;
-		else*/
 		return (label == this->label) ? sum + " " + this->value : sum;
 	}; 
 

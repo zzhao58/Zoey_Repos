@@ -20,11 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{DFE64083-8F64-481E-AAC2-6B6E0D012BA1}</ProjectGuid>
+    <ProjectGuid>{5D602C4F-9791-4588-9721-32D95F14F48D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>w3athome</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
-    <ProjectName>at_home</ProjectName>
+    <RootNamespace>athome</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -140,15 +139,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="w3.cpp" />
+    <ClCompile Include="Message.cpp" />
+    <ClCompile Include="MessagePack.cpp" />
+    <ClCompile Include="Notifications.cpp" />
+    <ClCompile Include="w4.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="References.txt" />
-    <Text Include="Sales.txt" />
+    <None Include="w4_test.dat" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="List.h" />
-    <ClInclude Include="LVPair.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="MessagePack.h" />
+    <ClInclude Include="Notifications.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

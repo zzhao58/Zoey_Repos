@@ -14,7 +14,7 @@ namespace sict {
 
 			List<T, N> baseList = (List<T, N>)*this;
 			V summary = SummableLVPair<L, V>::getInitialValue();
-			for (size_t i = 0; i < baseList.size(); i++) {
+			for (size_t i = 0; i <= baseList.size(); i++) {
 				summary = baseList[i].sum(label,summary);
 			}
 			return summary;

@@ -1,0 +1,24 @@
+week 03
+
+
+1 The reason for specializing the sum() member fucntion
+For the string, we need to special definiton, because we can't plus them together, actually we only 
+can concatenate them.
+template<>
+std::string SummableLVPair<std::string, std::string>::sum(const std::string& label, const std::string& sum) const {
+	return (label == this->label) ? sum + " " + this->value : sum;
+	}; 
+	
+	
+2 The reason for specializing the initial value for a summation.
+For a intger, the initial value is 0, but for a tring the initial value should be "".
+template<>
+std::string SummableLVPair<std::string, std::string>::initValue = "";
+
+
+
+3 The reason for defining the class variable outside the class definition.
+Becasue the value is not change or effect after a class derived a instance or object, all object 
+will chare a same value.
+template <typename T, int N>
+size_t List<T,N>::num_element = 0u;

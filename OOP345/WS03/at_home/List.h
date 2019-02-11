@@ -39,5 +39,22 @@
 	};
 	 template <typename T, int N>
 	 size_t List<T,N>::num_element = 0u;
+
+
+	 //derived from base class which is List class.
+	 template <typename T, typename L, typename V, int N>
+	 class LVList : public List<T, N> {
+	 public:
+		 V accumulate(const L& label) const {//same label ' value . plus together
+
+			 List<T, N> baseList = (List<T, N>)*this;
+			 V summary = SummableLVPair<L, V>::getInitialValue();
+			 for (size_t i = 0; i <= baseList.size(); i++) {//size is for how many element for an array
+				 summary = baseList[i].sum(label, summary);//call fucntion sun depends on type.
+			 }
+			 return summary;
+		 }
+	 };
+
 }
 #endif

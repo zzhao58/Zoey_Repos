@@ -1,88 +1,79 @@
 
-var fs = require('fs');
-var employees=[];
-var departments=[];
+var employees = {};
+var departments = [];
+const fs = require("fs");
 
-module.exports.initialize=function()
-{
-  function readFile_employees(){
-  return new Promise(function(resolve, reject){
-    fs.readFile('./data/employees.json', (err, data)=>{
-          if(err)
-          {
-              reject("Unable to read file");
-          }
-          else
-          {
-              employees = JSON.parse(data);
-              resolve(employees);
-          }
-    })
-  });
- }
-
-  function readFile_departments(){
-  return new Promise(function(resolve, reject){
-    fs.readFile('./data/departments.json', (err, data)=>{
-        if(err)
-        {
-          reject("Unable to read file");
+//Initialize
+module.exports.initialize = function() {
+    return new Promise(function(resolve, reject){
+        try{
+            fs.readFile('./data/employees.json', 
+                        function(err, data){
+                          if(err) throw err;
+                          employees = JSON.parse(data);
+                        }
+                       );
+            fs.readFile('./data/departments.json', 
+                        function(err, data){
+                        if(err) throw err;
+                        departments = JSON.parse(data);
+                        }
+                       );
+        } catch(ex){
+            reject("unable to read file");
         }
-        else
-        {
-            departments = JSON.parse(data);
-            resolve(departments);
-        }
-    })
-  });
- }
-
- return readFile_employees()
- .then(readFile_departments);
+        resolve("read file successfully");
+    });
 }
 
-
-module.exports.getAllEmployees=function(){
-    return new Promise((resolve, reject)=>{
-      if(employees.length==0)
-      {
-        reject("no results returned");
-      }
-   
-        resolve(employees); 
+//getAllEmployees
+module.exports.getAllEmployees = function(){
+    //var allEmployees = [];
+    return new Promise(function(reject, resolve){
+        //  for(var i = 0; i < employees.length; i++){
+        //      allEmployees.push(employees[i]);
+        //  }        
+        if(employees.length == 0){
+            reject("allEmployees no results returned");
+        }
+        resolve(employees);
     });
-  }
+}
 
-  module.exports.getManagers=function(){
-    var managers=[];
-    
-    return new Promise((resolve, reject)=>{
-      if(employees.length!=0)
-      {      
-          employees.forEach(function(element)
-          {
-           if(element.isManager==true)
-               managers.push(element); 
-          });
-  
-         resolve(managers);    
-      }
-      else
-      {
-         reject("no results returned.");
-      }
+//getManagers
+module.exports.getManagers = function(){
+    var managers = [];
+    return new Promise(function(reject, resolve){
+        if(employees.length == 0){
+            reject("employees no results returned");
+        }else{
+            for(var j = 0; j < employees.length; j++){
+                if(employees[j].isManager == true){
+                    managers.push(employees[j]);
+                }
+            }
+            if(managers.length == 0){
+                reject("managers no results returned");
+            }
+        }
+        resolve(managers);
     });
-  }
+}
 
-  module.exports.getDepartments=function(){
-    return new Promise((resolve, reject)=>{
-      if(departments.length ==0)
-      {
-        reject("no results returned.");
-      }
-      
-        resolve(departments);
-    });    
-  }
-    
-
+//getDepartments
+module.exports.getDepartments = function(){
+    var _departments = [];
+    return new Promise(function(reject, resolve){
+        if(employees.length == 0){
+            reject("employees no results returned");
+        }else{
+            for(var k = 0; k < departments.length; k++){
+                _departments.push(departments[k]);
+            }
+            if(_departments.length == 0){
+                reject("_departments no results returned");
+            }
+        }
+        resolve(_departments);
+    });
+}
