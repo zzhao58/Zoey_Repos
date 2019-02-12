@@ -1,13 +1,15 @@
 #ifndef SICT_NOTIFICATIONS_H
 #define SICT_NOTIFICATIONS_H
 
+#include <iostream>
+#include <string>
 #include "Message.h"
 
 namespace sict
 {
 	class Notifications
 	{
-		Message** p_messages;
+		const Message** p_messages;
 		int MAX;
 		int num_message;
 	public:

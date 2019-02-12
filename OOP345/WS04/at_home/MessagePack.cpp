@@ -13,16 +13,14 @@ namespace sict {
 
 	MessagePack::MessagePack(Message** src, int num) {
 		if (src != nullptr && num > 0) {
-			num_message = num;
-
-			message = new Message[num];
+			num_message = 0; 
+			message = new Message[num];			
+			
 			for (int i = 0; i < num; i++) {
-				if (!(*src)[i].empty()) {
-					message[i] = (*src)[i];		//only copy Message objects where they are not empty
-				}
-				else {
-					message[i] = Message();	   //if src is empty, set it to safe empty state.
-				}
+				if (!src[i]->empty()) {
+					message[num_message] = *src[i];		//only copy Message objects where they are not empty
+					num_message++;
+				}				
 			}
 		}
 		else {

@@ -12,7 +12,7 @@ namespace sict{
 			MAX = max;
 			//Message* message1 = new Message[MAX];
 			//p_messages = &message1; 
-			*p_messages = new Message[MAX];
+ 			p_messages = new const Message*[MAX];
 			num_message = 0;
 		}
 		else {
@@ -51,8 +51,8 @@ namespace sict{
 	}
 
 	Notifications& Notifications::operator+=(const Message& msg){
-		if (num_message < MAX) {
-			(*p_messages)[num_message] = msg;
+		if (!msg.empty() && num_message < MAX) {
+			p_messages[num_message] = &msg;
 			num_message++;
 		}
 		return *this;
@@ -62,16 +62,16 @@ namespace sict{
 		bool found = false;
 		int i;
 		for (i = 0; i < num_message && !found; i++)
-			if ((*p_messages)[i] == msg) {
+			if (p_messages[i] == &msg) {
 				found = true;
 			}
 
 		if(found) {
 			for ( ; i < num_message; i++)
-				(*p_messages)[i-1] = (*p_messages)[i];
+				p_messages[i-1] = p_messages[i];
 
 			if (num_message) {
-				(*p_messages)[num_message - 1] = Message();
+				p_messages[num_message - 1] = nullptr;
 				num_message--;
 			}
 		}
@@ -80,7 +80,7 @@ namespace sict{
 	
 	void Notifications::display(ostream& os) const{
 		for (int i = 0; i < num_message; i++)
-			(*p_messages)[i].display(os);
+			p_messages[i]->display(os);
 	}
 
 	size_t Notifications::size() const {
