@@ -1,0 +1,45 @@
+• The difference between the implementations of a composition and an aggregation.
+The composition: the component will be destry before the composer was destruction
+The aggregation: the aggregatee is more dependent and it wouldn't be effect by aggregator.
+
+
+
+• The difference between the implementations of move and copy functions in a composition and an aggregation.
+Cope: there are 2 types which is shadow copy and deep copy,after a loop in the array, we can assign the value to the original value.
+otifications& Notifications::operator=(const Notifications& src){
+		if (this != &src)
+		{
+			num_message = src.num_message;
+			MAX = src.MAX;
+
+			delete[] p_messages;
+			if (src.p_messages != nullptr)
+			{
+				p_messages = new const Message*[num_message];
+				for (int i = 0; i < num_message; i++)
+				{
+					p_messages[i] = src.p_messages[i];
+				}
+			}
+			else
+			{
+				p_messages = nullptr;
+			}
+		}
+
+		return *this;
+	}
+	
+Move: we don't need loop , just direct assignment value,most important is that after assignment, the rvalue't life must stop or nullptr.
+Notifications& Notifications::operator=(Notifications&& src) {
+		if (this != &src) {
+			p_messages = src.p_messages;
+			MAX = src.MAX;
+			num_message = src.num_message;
+
+			src.p_messages = nullptr;
+			src.MAX = 0;
+			src.num_message = 0;
+		}
+		return *this;
+	}

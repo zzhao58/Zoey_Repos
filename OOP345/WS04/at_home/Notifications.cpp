@@ -20,24 +20,39 @@ namespace sict{
 		}
 	}
 
-	Notifications::Notifications(const Notifications& src){
+	Notifications::Notifications(const Notifications& src){ //copy constrctor
 		*this = src;
 	}
 
-	Notifications::Notifications(Notifications&& src) {
+	Notifications::Notifications(Notifications&& src) {  //move constructor
 		*this = move(src);
 	}
 
-	Notifications& Notifications::operator=(const Notifications& src){
-		if (this != &src){
-			p_messages = src.p_messages;
-			MAX = src.MAX;
+	Notifications& Notifications::operator=(const Notifications& src){ //copy assignment
+		if (this != &src)
+		{
 			num_message = src.num_message;
+			MAX = src.MAX;
+
+			delete[] p_messages;
+			if (src.p_messages != nullptr)
+			{
+				p_messages = new const Message*[num_message];
+				for (int i = 0; i < num_message; i++)
+				{
+					p_messages[i] = src.p_messages[i];
+				}
+			}
+			else
+			{
+				p_messages = nullptr;
+			}
 		}
+
 		return *this;
 	}
 
-	Notifications& Notifications::operator=(Notifications&& src) {
+	Notifications& Notifications::operator=(Notifications&& src) {  //move assignment
 		if (this != &src) {
 			p_messages = src.p_messages;
 			MAX = src.MAX;

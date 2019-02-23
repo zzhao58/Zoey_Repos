@@ -1,79 +1,195 @@
+var employees=[];
+var departments=[];
 
-var employees = {};
-var departments = [];
-const fs = require("fs");
+module.exports.initialize=function()
+{
+  const fs = require('fs');
 
-//Initialize
-module.exports.initialize = function() {
-    return new Promise(function(resolve, reject){
-        try{
-            fs.readFile('./data/employees.json', 
-                        function(err, data){
-                          if(err) throw err;
-                          employees = JSON.parse(data);
-                        }
-                       );
-            fs.readFile('./data/departments.json', 
-                        function(err, data){
-                        if(err) throw err;
-                        departments = JSON.parse(data);
-                        }
-                       );
-        } catch(ex){
-            reject("unable to read file");
+  function readFile_employees(){
+  return new Promise(function(resolve, reject){
+    fs.readFile('./data/employees.json', (err, data)=>{
+          if(err)
+          {
+              reject("Unable to read file");
+          }
+          else
+          {
+              employees = JSON.parse(data);
+              resolve(employees);
+          }
+    })
+  });
+ }
+
+  function readFile_departments(){
+  return new Promise(function(resolve, reject){
+    fs.readFile('./data/departments.json', (err, data)=>{
+        if(err)
+        {
+          reject("Unable to read file");
         }
-        resolve("read file successfully");
+        else
+        {
+            departments = JSON.parse(data);
+            resolve(departments);
+        }
+    })
+  });
+ }
+
+ return readFile_employees()
+ .then(readFile_departments);
+}
+ 
+module.exports.getAllEmployees=function(){
+  return new Promise((resolve, reject)=>{
+    if(employees.length==0)
+    {
+      reject("no results returned");
+    }
+ 
+      resolve(employees); 
+  });
+}
+
+module.exports.getManagers=function(){
+  var managers=[];
+  
+  return new Promise((resolve, reject)=>{
+    if(employees.length!=0)
+    {      
+        employees.forEach(function(element)
+        {
+         if(element.isManager==true)
+             managers.push(element); 
+        });
+
+       resolve(managers);    
+    }
+    else
+    {
+       reject("no results returned.");
+    }
+  });
+}
+
+module.exports.getDepartments=function(){
+  return new Promise((resolve, reject)=>{
+    if(departments.length ==0)
+    {
+      reject("no results returned.");
+    }
+    
+      resolve(departments);
+  });    
+}
+
+module.exports.addEmployee=(employeeData)=>{
+  return new Promise((resolve, reject)=>{
+    if(employeeData.isManager==null)
+    {
+      employeeData.isManager=false;
+    }
+    else
+    {
+      employeeData.isManager=true; 
+   
+      employeeData.employeeNum=employees.length+1;
+      employees.push(employeeData);   
+    }
+
+    resolve(employees);
+  });
+}
+  
+module.exports.getEmployeesByStatus=(status)=>{ 
+  var employees_status=[];
+
+  return new Promise((resolve, reject)=>{    
+    if(employees.length!=0)
+     {
+       employees.forEach(function(element)
+        {
+          if(element.status==status)
+           {
+             employees_status.push(element);
+           }
+        })
+     }
+    if(employees_status.length==0)
+        {
+          reject("no results returned");
+        }  
+       
+          resolve(employees_status);
+     });
+}
+
+module.exports.getEmployeesByDepartment=(department)=>{
+  var employees_department=[];
+
+  return new Promise((resolve, reject)=>{  
+    if(employees.length!=0)
+      {
+        employees.forEach(function(element)
+         {
+           if(element.department==department)
+             {
+               employees_department.push(element);
+             }
+         })
+      }
+    if(employees_department.length==0)
+      {
+         reject("no results returned");
+      }   
+
+         resolve(employees_department);
+   });
+}
+
+module.exports.getEmployeesByManager=(employeeManagerNum)=>{
+  var employees_manager=[];
+
+  return new Promise((resolve, reject)=>{       
+    if(employees.length!=0)
+      {
+        employees.forEach(function(element)
+         {
+          if(element.employeeManagerNum==employeeManagerNum)
+            {
+              employees_manager.push(element);
+            }
+         })
+      }
+    if(employees_manager.length==0)
+      {
+        reject("no results returned");
+      }  
+
+        resolve(employees_manager);
     });
 }
 
-//getAllEmployees
-module.exports.getAllEmployees = function(){
-    //var allEmployees = [];
-    return new Promise(function(reject, resolve){
-        //  for(var i = 0; i < employees.length; i++){
-        //      allEmployees.push(employees[i]);
-        //  }        
-        if(employees.length == 0){
-            reject("allEmployees no results returned");
-        }
-        resolve(employees);
-    });
-}
+module.exports.getEmployeeByNum=(employeeNum)=>{
+  var employees_employeeNum=[];
 
-//getManagers
-module.exports.getManagers = function(){
-    var managers = [];
-    return new Promise(function(reject, resolve){
-        if(employees.length == 0){
-            reject("employees no results returned");
-        }else{
-            for(var j = 0; j < employees.length; j++){
-                if(employees[j].isManager == true){
-                    managers.push(employees[j]);
-                }
-            }
-            if(managers.length == 0){
-                reject("managers no results returned");
-            }
-        }
-        resolve(managers);
-    });
-}
-
-//getDepartments
-module.exports.getDepartments = function(){
-    var _departments = [];
-    return new Promise(function(reject, resolve){
-        if(employees.length == 0){
-            reject("employees no results returned");
-        }else{
-            for(var k = 0; k < departments.length; k++){
-                _departments.push(departments[k]);
-            }
-            if(_departments.length == 0){
-                reject("_departments no results returned");
-            }
-        }
-        resolve(_departments);
+  return new Promise((resolve, reject)=>{
+    if(employees.length!=0)
+    {
+       employees.forEach(function(element)
+        {
+          if(element.employeeNum==employeeNum)
+           {
+              employees_employeeNum.push(element);
+           }
+        })
+    }
+    if(employees_employeeNum.length==0)
+     {
+         reject("no results returned");
+     }  
+            
+         resolve(employees_employeeNum);
     });
 }

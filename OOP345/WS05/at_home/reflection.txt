@@ -1,0 +1,10 @@
+1 The difference between the implementations of a functor and a lambda expression
+
+In fact, lambda could be used instead of a simple functor, requiring only a small amount of code. If using functor, you have to declaring a class and overloading the operator ().
+
+
+2 A list of the exceptions that you have reported and the cases where you terminated execution normally.
+
+	exception 1: throw 1 -- The number of elements is not greater than zero.
+	exception 2: throw 2 -- exceed max room of KVlist.
+	if no exceptions were captured, terminate main funcion by call std::exit(0). 
