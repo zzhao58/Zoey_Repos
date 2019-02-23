@@ -1,35 +1,31 @@
 var employees=[];
 var departments=[];
 
-module.exports.initialize=function()
-{
+module.exports.initialize = function(){
   const fs = require('fs');
 
   function readFile_employees(){
   return new Promise(function(resolve, reject){
-    fs.readFile('./data/employees.json', (err, data)=>{
-          if(err)
-          {
-              reject("Unable to read file");
+    fs.readFile('./data/employees.json', (error, data)=>{
+          if(error){
+              reject("Cannot read this file!");
           }
-          else
-          {
+          else{
               employees = JSON.parse(data);
               resolve(employees);
           }
-    })
+        }
+    )
   });
  }
 
   function readFile_departments(){
   return new Promise(function(resolve, reject){
-    fs.readFile('./data/departments.json', (err, data)=>{
-        if(err)
-        {
-          reject("Unable to read file");
+    fs.readFile('./data/departments.json', (error, data)=>{
+        if(error){
+          reject("Cannot read this file!");
         }
-        else
-        {
+        else{
             departments = JSON.parse(data);
             resolve(departments);
         }
@@ -43,12 +39,9 @@ module.exports.initialize=function()
  
 module.exports.getAllEmployees=function(){
   return new Promise((resolve, reject)=>{
-    if(employees.length==0)
-    {
+    if(employees.length == 0)
       reject("no results returned");
-    }
- 
-      resolve(employees); 
+    resolve(employees); 
   });
 }
 
@@ -56,42 +49,33 @@ module.exports.getManagers=function(){
   var managers=[];
   
   return new Promise((resolve, reject)=>{
-    if(employees.length!=0)
-    {      
-        employees.forEach(function(element)
-        {
-         if(element.isManager==true)
-             managers.push(element); 
+    if(employees.length!=0){      
+        employees.forEach(function(elm){
+         if(elm.isManager==true)
+             managers.push(elm); 
         });
-
        resolve(managers);    
     }
-    else
-    {
-       reject("no results returned.");
+    else{
+       reject("no records returned.");
     }
   });
 }
 
 module.exports.getDepartments=function(){
   return new Promise((resolve, reject)=>{
-    if(departments.length ==0)
-    {
-      reject("no results returned.");
-    }
-    
-      resolve(departments);
+    if(departments.length == 0)
+      reject("no records returned.");
+    resolve(departments);
   });    
 }
 
-module.exports.addEmployee=(employeeData)=>{
+module.exports.addEmployee = function(employeeData){
   return new Promise((resolve, reject)=>{
-    if(employeeData.isManager==null)
-    {
+    if(employeeData.isManager==null){
       employeeData.isManager=false;
     }
-    else
-    {
+    else{
       employeeData.isManager=true; 
    
       employeeData.employeeNum=employees.length+1;
@@ -101,95 +85,72 @@ module.exports.addEmployee=(employeeData)=>{
     resolve(employees);
   });
 }
-  
-module.exports.getEmployeesByStatus=(status)=>{ 
-  var employees_status=[];
 
+module.exports.getEmployeeByNum = function(employeeNum){
+    var employees_employeeNum=[];
+  
+    return new Promise((resolve, reject)=>{
+      if(employees.length!=0){
+         employees.forEach(function(element){
+            if(element.employeeNum==employeeNum){
+                employees_employeeNum.push(element);
+             }
+          })
+      }
+      if(employees_employeeNum.length==0)
+          reject("no results returned");
+      
+      resolve(employees_employeeNum);
+      });
+ }
+
+module.exports.getEmployeesByManager = function(employeeManagerNum){
+    var employees_manager=[];
+  
+    return new Promise((resolve, reject)=>{       
+      if(employees.length!=0){
+          employees.forEach(function(element){
+            if(element.employeeManagerNum==employeeManagerNum){
+                employees_manager.push(element);
+              }
+           })
+        }
+      if(employees_manager.length==0)
+          reject("no results returned");
+      resolve(employees_manager);
+      });
+ }
+
+module.exports.getEmployeesByStatus=function(status){ 
+  var employees_status=[];
   return new Promise((resolve, reject)=>{    
-    if(employees.length!=0)
-     {
-       employees.forEach(function(element)
-        {
-          if(element.status==status)
-           {
+    if(employees.length!=0){
+       employees.forEach(function(element){
+          if(element.status==status){
              employees_status.push(element);
            }
         })
      }
+
     if(employees_status.length==0)
-        {
           reject("no results returned");
-        }  
-       
-          resolve(employees_status);
+    resolve(employees_status);
      });
 }
 
-module.exports.getEmployeesByDepartment=(department)=>{
+module.exports.getEmployeesByDepartment=function(department){
   var employees_department=[];
 
   return new Promise((resolve, reject)=>{  
-    if(employees.length!=0)
-      {
-        employees.forEach(function(element)
-         {
-           if(element.department==department)
-             {
+    if(employees.length!=0){
+        employees.forEach(function(element){
+           if(element.department==department){
                employees_department.push(element);
              }
          })
       }
     if(employees_department.length==0)
-      {
          reject("no results returned");
-      }   
-
-         resolve(employees_department);
+    resolve(employees_department);
    });
-}
-
-module.exports.getEmployeesByManager=(employeeManagerNum)=>{
-  var employees_manager=[];
-
-  return new Promise((resolve, reject)=>{       
-    if(employees.length!=0)
-      {
-        employees.forEach(function(element)
-         {
-          if(element.employeeManagerNum==employeeManagerNum)
-            {
-              employees_manager.push(element);
-            }
-         })
-      }
-    if(employees_manager.length==0)
-      {
-        reject("no results returned");
-      }  
-
-        resolve(employees_manager);
-    });
-}
-
-module.exports.getEmployeeByNum=(employeeNum)=>{
-  var employees_employeeNum=[];
-
-  return new Promise((resolve, reject)=>{
-    if(employees.length!=0)
-    {
-       employees.forEach(function(element)
-        {
-          if(element.employeeNum==employeeNum)
-           {
-              employees_employeeNum.push(element);
-           }
-        })
-    }
-    if(employees_employeeNum.length==0)
-     {
-         reject("no results returned");
-     }  
-            
-         resolve(employees_employeeNum);
-    });
 }

@@ -1,12 +1,12 @@
 /*********************************************************************************
-* WEB322 – Assignment 02
+* WEB322 – Assignment 03
 * I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part
 * of this assignment has been copied manually or electronically from any other source
 * (including 3rd party web sites) or distributed to other students.
 *
-* Name: Zhi Zhao      Student ID: 109079178            Date: Jan 31,2019
+* Name: Zhi Zhao      Student ID: 109079178            Date: Feb 22,2019
 *
-* Online (Heroku) Link: __https://peaceful-harbor-69222.herokuapp.com/____
+* Online (Heroku) Link: _https://gentle-bayou-56650.herokuapp.com/___
 *
 ********************************************************************************/
 var express = require('express');
@@ -24,7 +24,7 @@ function onHttpStart() {
         function(reject, resolve){
             data_service.initialize()
                         .then((data)=>{console.log(data);})
-                        .catch((err)=>{console.log(err) ;})
+                        .catch((error)=>{console.log(error) ;})
         }
     )
 }
@@ -38,12 +38,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage: storage});
 
-app.post("/images/add", upload.single("imageFile"), (req, res)=>{
+app.post("/images/add", upload.single("imageFile"), function(req, res){
     res.redirect("/images");
 });
 
-app.get("/images", (req,res)=>{
-fs.readdir("./public/images/uploaded", function(err, items){    
+app.get("/images", function(req,res){
+fs.readdir("./public/images/uploaded", function(error, items){    
     res.json({"images":items});
 });
 })
@@ -69,64 +69,64 @@ app.get("/images/add", function(req, res){
 });
 
 
-app.get("/employees", ((req, res)=>{
+app.get("/employees", function(req, res){
     if(req.query.status){
         data_service.getEmployeesByStatus(req.query.status).then((data)=>{
             res.json(data);
         })
-        .catch((err)=>{
-            res.send(err);
+        .catch((error)=>{
+            res.send(error);
         })     
     }
     else if(req.query.department) {
         data_service.getEmployeesByDepartment(req.query.department).then((data)=>{
             res.json(data);
         })
-        .catch((err)=>{
-            res.send(err);
+        .catch((error)=>{
+            res.send(error);
         })  
     }
     else if(req.query.employeeManagerNum){
         data_service.getEmployeesByManager(req.query.employeeManagerNum).then((data)=>{
             res.json(data);
         })
-        .catch((err)=>{
-            res.send(err);
+        .catch((error)=>{
+            res.send(error);
         })
     }
     else{
         data_service.getAllEmployees().then((data)=>{
             res.json(data);
         })
-        .catch((err)=>{
-            res.send(err);
+        .catch((error)=>{
+            res.send(error);
         })
     }    
-}));
+});
 
-app.get("/employees/:value", ((req, res)=>{
+app.get("/employees/:value", function(req, res){
     data_service.getEmployeeByNum(req.params.value).then((data)=>{
         res.json(data);
     })
-    .catch((err)=>{
-        res.send(err);
+    .catch((error)=>{
+        res.send(error);
     });
-}));
+});
 
 
 app.get('/managers', function(req, res){
     data_service.getManagers().then((data)=>{
         res.json(data);
-    }).catch((err)=>{
-        res.send(err);
+    }).catch((error)=>{
+        res.send(error);
     });
 })
 
 app.get('/departments', function(req, res){
     data_service.getDepartments().then((data)=>{
         res.json(data);
-    }).catch((err)=>{
-        res.send(err);
+    }).catch((error)=>{
+        res.send(error);
     });
 })
 
@@ -137,7 +137,7 @@ app.post("/employees/add", function(req, res) {
     });
 
 app.use(function(req, res){
-    res.status(404).send("Page Not Found");
+    res.status(404).send("Error 404: The page you request is not found!!");
 })
 
 app.listen(HTTP_PORT, onHttpStart);
