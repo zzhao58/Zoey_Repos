@@ -1,143 +1,84 @@
+
 /*********************************************************************************
-* WEB322 – Assignment 03
+* WEB322 – Assignment 02
 * I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part
 * of this assignment has been copied manually or electronically from any other source
 * (including 3rd party web sites) or distributed to other students.
 *
-* Name: Zhi Zhao      Student ID: 109079178            Date: Feb 22,2019
+* Name: Zhi Zhao    Student ID: 109079178   Date: Feb 1, 2019
 *
-* Online (Heroku) Link: _https://gentle-bayou-56650.herokuapp.com/___
+* Online (Heroku) Link: https://pacific-ocean-67163.herokuapp.com/ 
 *
-********************************************************************************/
-var express = require('express');
-var data_service = require('./data-service.js');
-var HTTP_PORT = process.env.PORT || 8080;
-var app = express();
-var path = require("path");
-var multer = require("multer");
-var fs = require('fs');
-const bodyParser = require('body-parser');
+********************************************************************************/ 
+var employees = [];
+var departments = [];
+const fs = require("fs");
 
-function onHttpStart() {
-    console.log("Express http server listening on: " + HTTP_PORT);
-    return new Promise(
-        function(reject, resolve){
-            data_service.initialize()
-                        .then((data)=>{console.log(data);})
-                        .catch((error)=>{console.log(error) ;})
+module.exports.initialize = function() {
+    return new Promise(function(resolve, reject){
+        try{
+            fs.readFile('./data/employees.json', function(err, data){
+                if(err) throw err;
+                employees = JSON.parse(data);
+            });
+            fs.readFile('./data/departments.json', function(err, data){
+                if(err) throw err;
+                departments = JSON.parse(data);
+            });
+        } catch(ex){
+            reject("unable to read file");
         }
-    )
+        resolve("JSON files successfully");
+    });
 }
 
-const storage = multer.diskStorage({
-    destination: "./public/images/uploaded",
-    filname: function(req, file, cb){
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
 
-const upload = multer({storage: storage});
-
-app.post("/images/add", upload.single("imageFile"), function(req, res){
-    res.redirect("/images");
-});
-
-app.get("/images", function(req,res){
-fs.readdir("./public/images/uploaded", function(error, items){    
-    res.json({"images":items});
-});
-})
-
-app.use(bodyParser.urlencoded({extended:true}));
-
-app.use(express.static('public'))
-
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname + '/views/home.html'));
-})
-
-app.get('/about', function (req, res) {
-    res.sendFile(path.join(__dirname + '/views/about.html'));
-})
-
-app.get("/employees/add", function(req, res){
-    res.sendFile(path.join(__dirname, "/views/addEmployee.html"));
-});
-
-app.get("/images/add", function(req, res){
-    res.sendFile(path.join(__dirname, "/views/addImage.html"));
-});
-
-
-app.get("/employees", function(req, res){
-    if(req.query.status){
-        data_service.getEmployeesByStatus(req.query.status).then((data)=>{
-            res.json(data);
-        })
-        .catch((error)=>{
-            res.send(error);
-        })     
-    }
-    else if(req.query.department) {
-        data_service.getEmployeesByDepartment(req.query.department).then((data)=>{
-            res.json(data);
-        })
-        .catch((error)=>{
-            res.send(error);
-        })  
-    }
-    else if(req.query.employeeManagerNum){
-        data_service.getEmployeesByManager(req.query.employeeManagerNum).then((data)=>{
-            res.json(data);
-        })
-        .catch((error)=>{
-            res.send(error);
-        })
-    }
-    else{
-        data_service.getAllEmployees().then((data)=>{
-            res.json(data);
-        })
-        .catch((error)=>{
-            res.send(error);
-        })
-    }    
-});
-
-app.get("/employees/:value", function(req, res){
-    data_service.getEmployeeByNum(req.params.value).then((data)=>{
-        res.json(data);
-    })
-    .catch((error)=>{
-        res.send(error);
+module.exports.getAllEmployees = function(){
+    var _employees = [];
+    return new Promise(function(reject, resolve){
+        for(var i = 0; i < employees.length; i++){
+            _employees.push(employees[i]);
+        }
+        if(_employees.length == 0){
+            reject("_employees no results returned");
+        }
+        resolve(_employees);
     });
-});
+}
 
 
-app.get('/managers', function(req, res){
-    data_service.getManagers().then((data)=>{
-        res.json(data);
-    }).catch((error)=>{
-        res.send(error);
+module.exports.getManagers = function(){
+    var _managers = [];
+    return new Promise(function(reject, resolve){
+        if(employees.length == 0){
+            reject("employees no results returned");
+        }else{
+            for(var i = 0; i < employees.length; i++){
+                if(employees[i].isManager == true){
+                    _managers.push(employees[i]);
+                }
+            }
+            if(_managers.length == 0){
+                reject("_managers no results returned");
+            }
+        }
+        resolve(_managers);
     });
-})
+}
 
-app.get('/departments', function(req, res){
-    data_service.getDepartments().then((data)=>{
-        res.json(data);
-    }).catch((error)=>{
-        res.send(error);
+module.exports.getDepartments = function(){
+    var _departments = [];
+    return new Promise(function(reject, resolve){
+        if(employees.length == 0){
+            reject("employees no results returned");
+        }else{
+            for(var i = 0; i < departments.length; i++){
+                _departments.push(departments[i]);
+            }
+            if(_departments.length == 0){
+                reject("_departments no results returned");
+            }
+        }
+        resolve(_departments);
     });
-})
-
-app.post("/employees/add", function(req, res) {
-    data_service.addEmployee(req.body).then(()=>{
-        res.redirect("/employees");
-    })
-    });
-
-app.use(function(req, res){
-    res.status(404).send("Error 404: The page you request is not found!!");
-})
-
-app.listen(HTTP_PORT, onHttpStart);
+}

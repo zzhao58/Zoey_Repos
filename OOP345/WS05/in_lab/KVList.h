@@ -25,7 +25,7 @@ namespace sict {
 			}
 		}
 
-		KVList(KVList&& kl) { //move construct
+		KVList(KVList&& kl) { 
 			list = kl.list;
 			current_number = kl.current_number;
 
