@@ -17,7 +17,7 @@ namespace sict {
 		unsigned Quantity;
 		std::string description;
 		unsigned field_width;
-		//unsigned name_field_width;
+	
 	public:
 		ItemSet(std::string&);
 		const std::string& getName() const;
