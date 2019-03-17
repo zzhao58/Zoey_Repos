@@ -15,34 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="iProduct.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Product.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sale.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TaxableProduct.h">
+    <ClInclude Include="DataTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Product.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sale.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="w6.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TaxableProduct.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <None Include="Simple.dat" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Sales.dat" />
+    <ClCompile Include="w7.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

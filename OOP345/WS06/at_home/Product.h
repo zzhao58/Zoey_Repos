@@ -17,11 +17,11 @@ namespace sict {
 
 	public:
 		Product(unsigned, double);
-		double price() const;
-		void display(std::ostream& os) const;
+		virtual double price() const;					// virtual -- optional
+		virtual void display(std::ostream& os) const;	// virtual -- optional
 	};
 
-	std::ostream& operator<<(std::ostream& os, const iProduct& p);
-	iProduct* readRecord(std::ifstream& file);
+	std::ostream& operator<<(std::ostream& os, const iProduct& p);  //helper
+	iProduct* readRecord(std::ifstream& file);						//gobal function
 }
 #endif 

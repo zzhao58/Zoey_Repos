@@ -35,26 +35,36 @@ namespace sict
 
 	void Sale::display(std::ostream& os) const {
 		os.width(FW);
-		os.setf(std::ios::right);
+		os.setf(std::ios::right); 
 		os << "Product No";
+
 		os.width(FW);
 		os.setf(std::ios::right);
-		os << "Cost" << std::endl;
+		os << "Cost";
+
+		os.width(8);
+		os.setf(std::ios::left);
+		os << "Taxable";
+
+		os << std::endl;
 
 		double total = 0;
 		for (size_t i = 0; i < iProduct_container.size(); i++) {
 			iProduct_container[i]->display(os);
+			std::cout << std::endl;
 			total += iProduct_container[i]->price();
 		}
-		 
+
 		os.width(FW);
 		os.setf(std::ios::right);
 		os << "Total";
+
 		os.width(FW);
-		os.setf(std::ios::right);
+		os.setf(std::ios::right); 
 		os.fixed;
 		os.precision(2);
 		os << total << std::endl;
+		
 	}
 
 

@@ -1,0 +1,30 @@
+• The reason for using the vector container rather than any other available in the STL.
+Because the vector container can change size, 
+which is allocated on heap, so it makes their element nearly as array and very efficient.
+
+
+• Why there is no need to deallocate the dynamically allocated memory in your own code.
+Because the vector auto deallocate the dynamically allocated memory.
+
+
+• How the range-based for simplifies coding in this case.
+because they offered some method function, example size_t size(), void push_back()
+it's very useful and simplifies our coding
+
+try{
+			while (std::getline(fin, line)){
+				lineNum++;
+			}
+			fin.close();
+
+			fin.open(filename);
+			for (size_t i = 0; i < lineNum; i++){
+				iProduct_container.push_back(dynamic_cast<Product*>(readRecord(fin)));
+			}
+			
+			fin.close();
+		}
+		catch(const char* msg){
+			std::cout << msg << " File open failed!" << std::endl;
+		}
+	

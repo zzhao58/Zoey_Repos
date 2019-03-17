@@ -15,7 +15,8 @@ namespace sict {
 		size_t col_index = 0;
 		Utilities util;
 
-		while (go_on && col_index < 4) { //go_on is true which means keep on moveing
+		//util.setFieldWidth(field_width);
+		while (go_on && col_index < 4) {
 			try {
 				if (col_index == 0) {
 					name = util.extractToken(src, current_pos);

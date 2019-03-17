@@ -6,17 +6,16 @@
 
 #include <iostream>
 #include <fstream>
-#include <deque>
+#include <vector>
 #include "Product.h"
 
 namespace sict {
 
 	class Sale {
-		std::deque<Product*> iProduct_container;
+		std::vector<Product*> iProduct_container;
 	public:
 		Sale(const char*);
 		void display(std::ostream& os) const;
-
 	};
 }
 #endif

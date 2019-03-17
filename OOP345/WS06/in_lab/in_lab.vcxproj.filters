@@ -21,7 +21,7 @@
     <ClInclude Include="Sale.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IProduct.h">
+    <ClInclude Include="iProduct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
