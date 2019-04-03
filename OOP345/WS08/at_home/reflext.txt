@@ -1,0 +1,12 @@
+// Workshop 8 - Smart Pointers
+// reflection
+// Zhi Zhao 109079178
+// 2019/03/27
+
+• The advantage that smart pointer syntax provides.
+The advantage of smart pointer is that calls its object's or resource's destructor when it itself is destroyed
+so we don't need to consider the memory deallocation.
+
+• List the difference between raw and smart pointer syntax in your solution.
+Row pointer : we need to destroyed the point after we create a point through method of "new"
+Smart point: we don't need to deal with the memory. 

@@ -1,0 +1,40 @@
+
+• The reason for using the vector container rather than any other available in the STL.
+By default, use vector when you need a container because that manage data structures that can change in size but have their elements ordered in sequence
+and are nearly as efficient as arrays. 
+
+
+• List the STL template functions that you used in your solution.
+
+T mean() const
+		{
+			T s;
+			s = std::accumulate(y.begin(), y.end(), (T)0) / y.size();  
+			return s;
+		}
+
+T sigma() const
+		{
+			T upper, Y_mean;
+			T sigma{ 0 };
+
+			Y_mean = mean();
+
+			upper = std::accumulate(y.begin(), y.end(), (T)0, [=](T a, T b) {return a + (b - Y_mean)*(b - Y_mean); }); 
+
+			sigma = std::sqrt(upper / (y.size() - 1));
+			return sigma;
+		}
+
+
+• Identify where you used lambda expressions.
+
+upper = std::accumulate(y.begin(), y.end(), (T)0, [=](T a, T b) {return a + (b - Y_mean)*(b - Y_mean); }); 
+std::sort(a.begin(), a.end(), [](T i, T j){ return i > j; });
+
+
+
+
+
+• Comment on the ease of programming associated with the STL.
+this is a template which can accept any data type and make us easy to get some data, example  size(), being(), end(),accumulate,sort,inner_product and so on.

@@ -20,13 +20,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DataTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Flat.dat" />
     <None Include="HS_College_GPA.dat" />
     <None Include="Simple.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DataTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

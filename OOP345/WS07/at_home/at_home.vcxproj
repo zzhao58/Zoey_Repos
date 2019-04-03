@@ -142,12 +142,12 @@
     <ClCompile Include="w7.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DataTable.h" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Flat.dat" />
     <None Include="HS_College_GPA.dat" />
     <None Include="Simple.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DataTable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
