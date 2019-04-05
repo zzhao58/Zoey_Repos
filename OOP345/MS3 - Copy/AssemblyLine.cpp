@@ -147,7 +147,7 @@ namespace sict {
 		std::string next = "";
 		size_t next_pos;
 		nextStation.resize(line.size());
-		std::fill(nextStation.begin(), nextStation.end(), line.size());
+		std::fill(nextStation.begin(), nextStation.end(), line.size());  // set all nextStation to 5 in this case.
 		while (!file.eof()) {
 			next_pos = 0;
 			std::getline(file, record);
@@ -199,7 +199,7 @@ namespace sict {
 		os << ' ';
 		os << line[i]->getName() << " --> END OF LINE " << std::endl;
 		os << std::endl;
-	}
+	} 
 
 	// run the orders along the assembly line and displays the results
 	//
@@ -214,4 +214,5 @@ namespace sict {
 		os << "-------------------------------------\n";
 		lm.display(os);
 	}
+	
 }

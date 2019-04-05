@@ -19,15 +19,15 @@ int main(int argc, char *argv[])
 
 	Utilities::setDelimiter('|');
 
-	#ifdef OUTPUT_TO_FILE
+#ifdef OUTPUT_TO_FILE
 	std::ofstream os("Output.txt");
 	if (!ofs) {
 		std::cerr << "ERROR:  Failed to create output.txt file";
 		exit(1);
 	}
-	#else
+#else
 	std::ostream& os = std::cout;
-	#endif
+#endif
 
 	try {
 		AssemblyLine a(&argv[1], argc - 1);
@@ -57,9 +57,9 @@ int main(int argc, char *argv[])
 		std::cerr << str << std::endl;
 	}
 
-	#ifdef OUTPUT_TO_FILE
+#ifdef OUTPUT_TO_FILE
 	os.close();
-	#endif
+#endif
 
 	return 0;
 }
