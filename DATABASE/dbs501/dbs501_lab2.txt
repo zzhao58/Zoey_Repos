@@ -1,0 +1,152 @@
+---LAB2 DBS501 by ZHI ZHAO---
+------------------------------------------------------------------------------------
+ --(1)--
+SET SERVEROUTPUT ON
+set verify off
+set pagesize 120
+
+ACCEPT temperature_scale        PROMPT 'Enter your input scale (C or F) for temperature: ';
+ACCEPT temperature_value Number PROMPT 'Enter your temperature value to be converted: '; 
+
+DECLARE
+    v_temperature_scale varchar2(20);
+    v_temperature_value number(3,1);
+    v_c_values number(3,1);
+    v_f_values number(3,1);
+BEGIN
+    v_temperature_scale := '&temperature_scale';
+    v_temperature_value := &temperature_value;
+    
+    IF v_temperature_scale not in('C','F')THEN
+        dbms_output.put_line('This is NOT a valid scale. Must be C or F. ');
+    ELSIF v_temperature_scale='C' THEN
+        v_f_values:=(v_temperature_value * 1.8) + 32;
+        dbms_output.put_line('temperature '|| v_temperature_value ||'C in F is exactly ' || v_f_values);
+    ELSIF v_temperature_scale='F' THEN
+        v_c_values:=(v_temperature_value -32 ) * 0.5556;
+        dbms_output.put_line('temperature '|| v_temperature_value ||'F in C is exactly ' || v_c_values);
+    END IF;
+END;
+--------------------------------------------------------------------------------------------------------------
+(2)
+ACCEPT instrID        PROMPT 'Please enter the Instructor Id ';
+DECLARE
+    v_instructor_id number(3):=&instrID;
+    v_num_course number(3);
+    v_instructor_first_name varchar2(10);
+    v_instructor_last_name varchar2(10);
+    v_message varchar2(1000);
+BEGIN
+
+    SELECT I.INSTRUCTOR_ID,I.FIRST_NAME,I.LAST_NAME,COUNT(S.SECTION_ID)
+    INTO v_instructor_id,v_instructor_first_name,v_instructor_last_name,v_num_course
+    FROM INSTRUCTOR I
+    INNER JOIN SECTION S
+    ON I.INSTRUCTOR_ID=S.INSTRUCTOR_ID
+    WHERE I.INSTRUCTOR_ID = v_instructor_id
+    GROUP BY I.INSTRUCTOR_ID,I.FIRST_NAME,I.LAST_NAME;
+    
+    v_message := CASE
+        WHEN v_num_course=10 THEN 
+            'Instructor, '|| v_instructor_first_name||' '||v_instructor_last_name|| ' teaches '|| v_num_course ||' section(s). This instructor needs to rest in the next term.'
+        WHEN v_num_course=9 THEN 
+            'Instructor, '|| v_instructor_first_name||' '||v_instructor_last_name|| ' teaches '|| v_num_course ||' section(s). This instructor teaches enough sections.'
+        ELSE 
+            'Instructor, '||  v_instructor_first_name||' '||v_instructor_last_name|| ' teaches '|| v_num_course ||' section(s). This instructor may teach more sections.'
+        END;
+    DBMS_OUTPUT.PUT_LINE(v_message);
+
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('This is not a valid instructor ');        
+			
+END;
+------------------------------------------------------------------------------------------
+--(3)---
+ACCEPT inputval  PROMPT 'Please enter a Positive Integer: ';
+ 
+DECLARE
+    INPUTVALUE NUMBER(5):=&inputval;
+    TOTAL NUMBER(10):=0;
+    i NUMBER(5);
+
+BEGIN
+    IF MOD(INPUTVALUE,2) = 0 THEN
+        i:=2;
+    ELSE
+        i:=1;
+    END IF;
+    
+    WHILE i <=INPUTVALUE LOOP
+        TOTAL:=TOTAL+i;
+        i:=i+2;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('The sum of Even integers between 1 and '|| to_char(INPUTVALUE) ||' is '|| TOTAL);
+END;
+----------------------------------------------------------------------------------------------
+
+(4)
+ACCEPT locationID  PROMPT  'Enter valid Location Id: '
+DECLARE
+    CURSOR c_dep_cursor IS
+    SELECT D.department_id,count(DISTINCT E.employee_id) as employee_count
+    FROM LOCATIONS L
+    INNER JOIN DEPARTMENTS D  ON L.LOCATION_ID = D.LOCATION_ID
+    INNER JOIN EMPLOYEES E    ON D.DEPARTMENT_ID = E.DEPARTMENT_ID
+    WHERE L.LOCATION_ID = &locationID
+    GROUP BY D.department_ID;
+    
+    v_dep_record c_dep_cursor%rowtype;
+    v_dep_no pls_integer:=1;    
+BEGIN
+    FOR v_dep_record IN c_dep_cursor
+    LOOP
+       DBMS_OUTPUT.PUT_LINE('Outer Loop: Department #'||to_char(v_dep_no));
+       
+       FOR i IN 1..v_dep_record.EMPLOYEE_COUNT
+       LOOP
+        DBMS_OUTPUT.PUT_LINE('*Inner Loop: Employee #'|| to_char(i));
+       END LOOP;       
+       
+       v_dep_no := v_dep_no+1;
+    END LOOP;
+    
+END;
+----------------------------
+SET SERVEROUTPUT ON
+SET VERIFY OFF
+
+ACCEPT locationID  PROMPT  'Enter valid Location Id: ';
+
+DECLARE
+    V_LOCATION_ID NUMBER(5):= &locationID;
+    V_DEPARTMENT_COUNT NUMBER(20);
+    V_EMPLOYEE_COUNT NUMBER(20);
+
+BEGIN
+    SELECT count(department_id)
+    INTO V_DEPARTMENT_COUNT
+    FROM Departments 
+    WHERE Location_ID = V_LOCATION_ID;
+    
+    IF V_DEPARTMENT_COUNT=0 THEN
+        RAISE NO_DATA_FOUND;
+    END IF;
+    
+    SELECT COUNT(EMPLOYEE_ID)
+    INTO V_EMPLOYEE_COUNT
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID IN (SELECT DEPARTMENT_ID
+                            FROM DEPARTMENTS
+                            WHERE LOCATION_ID = V_LOCATION_ID
+                            );
+                            
+    FOR i IN 1..V_DEPARTMENT_COUNT
+    LOOP 
+        DBMS_OUTPUT.PUT_LINE('Outer Loop: Department #'|| i);
+        FOR j IN 1..V_EMPLOYEE_COUNT
+        LOOP
+            DBMS_OUTPUT.PUT_LINE('Inner Loop: Employee #'|| j);
+        END LOOP;
+    END LOOP;
+END;

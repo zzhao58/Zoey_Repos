@@ -1,0 +1,223 @@
+Lab1 DBS501 by ZHI ZHAO
+
+Local V_MINE is here: 700
+Outer V_MINE is here: 500
+Outer V_MINE is here: 1400
+
+-----------------------------------------------
+
+DECLARE
+    v_coursename varchar2(50);
+    v_number number(8,2);
+    v_classroom  constant varchar2(10):='704B';
+    v_new  boolean;
+    v_date date :=sysdate+7;
+BEGIN
+    dbms_output.put_line('The title is '||v_coursename);
+    dbms_output.put_line('The title is '||v_number);
+    dbms_output.put_line('The title is '||v_classroom);
+    IF v_new=TRUE THEN
+        dbms_output.put_line('The title is True.');
+    ELSE
+        dbms_output.put_line('The title is False.');
+    END IF;
+    
+    dbms_output.put_line('The title is '||v_date);
+    
+    v_coursename:='C++ advanced';
+    
+    IF v_coursename like '%SQL%'  THEN 
+        dbms_output.put_line('Introduction to Oracle Database');
+    ELSIF v_classroom like '%704B%' THEN
+        IF LENGTH(v_coursename)>0 THEN
+            dbms_output.put_line('Course name is '||v_coursename ||', classroom is '||v_classroom);
+        ELSE
+            dbms_output.put_line('Course is unknown '||', classroom is '||v_classroom);
+        END IF;
+    ELSE 
+         dbms_output.put_line('Course and location could not be determined');
+    END IF;
+
+
+END;
+
+output1:
+The title is 
+The title is 
+The title is 704B
+The title is False.
+The title is 22-MAY-19
+Course is unknown , classroom is 704B
+
+output2:
+The title is 
+The title is 
+The title is 704B
+The title is False.
+The title is 22-MAY-19
+Course name is C++ advanced, classroom is 704B
+
+
+-----------
+create table Lab1_tab(
+ID NUMERIC,
+LName VARCHAR2(20)
+)
+
+
+create sequence "Lab_seq"
+start with 1
+increment by 5
+nocache
+nocycle;
+
+
+DECLARE
+    v_id NUMERIC:=20;
+    v_lname VARCHAR2(20);
+    
+    max_student_Lname varchar2(9);
+    min_student_Lname varchar2(9);
+    min_instructor_Lname varchar2(9);
+    max_instructor_Lname varchar2(9);
+    
+    errflag1 boolean:=FALSE;
+    errflag2 boolean:=FALSE;
+    errflag3 boolean:=FALSE;
+    errflag4 boolean:=FALSE;
+BEGIN
+    --max studentt-----------------------------------------
+    BEGIN
+        SELECT STUDENT.last_name
+        INTO max_student_Lname
+        FROM STUDENT 
+        INNER JOIN (
+            SELECT STUDENT_ID
+                  --,count(SECTION_ID)
+            FROM ENROLLMENT
+            GROUP BY STUDENT_ID
+            HAVING COUNT(SECTION_ID)=     
+            (
+            SELECT MAX(COUNT(SECTION_ID))
+            FROM ENROLLMENT
+            GROUP BY STUDENT_ID
+            )
+        ) max_student
+        ON STUDENT.STUDENT_ID = max_student.STUDENT_ID
+        WHERE LENGTH(STUDENT.last_name)<9; 
+           
+        EXCEPTION
+            WHEN TOO_MANY_ROWS  THEN
+            BEGIN
+                INSERT INTO Lab1_Tab(ID,LName)
+                    VALUES("Lab_seq".NEXTVAL, 'Multiple Names');
+                errflag1:=TRUE;
+            END;        
+    END;    
+    IF errflag1=FALSE THEN
+        INSERT INTO Lab1_tab(ID,LName)
+            VALUES("Lab_seq".NEXTVAL, max_student_Lname);
+    END IF;    
+     ------------------------------------------------------------------
+
+    --min student------------------------------------------------------
+    BEGIN
+        SELECT STUDENT.last_name
+        INTO min_student_Lname
+        FROM STUDENT
+        INNER JOIN (
+            SELECT STUDENT_ID
+            FROM ENROLLMENT
+            GROUP BY STUDENT_ID
+            HAVING COUNT(SECTION_ID)=     
+            (
+            SELECT MIN(COUNT(SECTION_ID)) 
+            FROM ENROLLMENT
+            GROUP BY STUDENT_ID
+            )
+        ) min_student
+        ON STUDENT.STUDENT_ID = min_student.STUDENT_ID
+        WHERE LENGTH(STUDENT.last_name)<9; 
+           
+        EXCEPTION
+            WHEN TOO_MANY_ROWS  THEN
+            BEGIN
+                INSERT INTO  Lab1_tab(ID,LName)
+                    VALUES("Lab_seq".NEXTVAL, 'Multiple Names');
+                errflag2:=TRUE;    
+            END;        
+    END;
+    IF errflag2=FALSE THEN
+        INSERT INTO Lab1_tab(ID,LName)
+            VALUES("Lab_seq".NEXTVAL, min_student_Lname);
+    END IF; 
+    
+    ------------------------------------------------------------------------
+
+     --min instructor
+    BEGIN
+     SELECT INSTRUCTOR.last_name
+        INTO min_instructor_Lname
+        FROM INSTRUCTOR
+        INNER JOIN(
+            SELECT INSTRUCTOR_ID
+            FROM SECTION
+            GROUP BY INSTRUCTOR_ID
+            HAVING COUNT(DISTINCT COURSE_NO)=
+            (
+            SELECT MIN(COUNT(DISTINCT COURSE_NO))AS min_courses
+            FROM SECTION
+            GROUP BY INSTRUCTOR_ID
+            )
+        ) min_instructor
+        ON INSTRUCTOR.instructor_id = min_instructor.instructor_id
+        WHERE INSTRUCTOR.last_name not like '%s';
+        
+        EXCEPTION
+            WHEN TOO_MANY_ROWS  THEN
+            BEGIN
+                INSERT INTO  Lab1_tab(ID,LName)
+                    VALUES(v_id, 'Multiple Names');
+                errflag3:=TRUE;    
+            END;        
+    END;
+    IF errflag3=FALSE THEN
+        INSERT INTO Lab1_tab(ID,LName)
+            VALUES(v_id, min_instructor_Lname);
+    END IF;
+    -----------------------------------------------------
+
+    --max instructor---------------------------------------------
+    BEGIN
+     SELECT INSTRUCTOR.last_name
+        INTO max_instructor_Lname
+        FROM INSTRUCTOR
+        INNER JOIN(
+            SELECT INSTRUCTOR_ID
+            FROM SECTION
+            GROUP BY INSTRUCTOR_ID
+            HAVING COUNT(DISTINCT COURSE_NO)=
+            (
+            SELECT MAX(COUNT(DISTINCT COURSE_NO))AS max_courses
+            FROM SECTION
+            GROUP BY INSTRUCTOR_ID
+            )
+        )max_instructor
+        ON INSTRUCTOR.instructor_id = max_instructor.instructor_id;
+        
+        EXCEPTION
+            WHEN TOO_MANY_ROWS  THEN
+            BEGIN
+                INSERT INTO  Lab1_tab(ID,LName)
+                    VALUES("Lab_seq".NEXTVAL, 'Multiple Names');
+                errflag4:=TRUE;
+            END;
+    END;
+    IF errflag4=FALSE THEN
+    INSERT INTO Lab1_tab(ID,LName)
+        VALUES("Lab_seq".NEXTVAL, max_instructor_Lname);
+    END IF;
+   --------------------------------------------------------------------
+END;
+
+

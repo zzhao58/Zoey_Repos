@@ -21,7 +21,7 @@ namespace sict {
 				throw "Exception: one delimiter follows another without any token between them.";
 			}
 			
-			token = str.substr(next_pos, new_pos-next_pos);
+			token = str.substr(next_pos, new_pos-next_pos); //first parameter means: where start to get, second:how many position you need
 			next_pos = ++new_pos;	
 
 			if (token.length() > field_width) {

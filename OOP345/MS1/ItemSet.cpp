@@ -26,7 +26,7 @@ namespace sict {
 				}
 
 				if (col_index == 1) {
-					serialNumber = (unsigned)std::stoi(util.extractToken(src, current_pos));
+					serialNumber = (unsigned)std::stoi(util.extractToken(src, current_pos));//string to intger to unsinged
 				}
 
 				if (col_index == 2) {

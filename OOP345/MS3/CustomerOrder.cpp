@@ -117,7 +117,7 @@ namespace sict {
 			std::string filledstr;
 			for (auto i = Items.begin(); i != Items.end(); i++) {
 				filledstr = (i->getIsFilled()) ? "FILLED":"MISSING";
-				os << std::setw(field_width + 1) << "[" << i->getserialNumber() << "] " 
+				os << std::string(field_width + 1, ' ') << "[" << i->getserialNumber() << "] "
 				   << i->getName() << " - " << filledstr << std::endl;
 			}
 		}

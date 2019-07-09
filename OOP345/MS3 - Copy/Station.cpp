@@ -1,3 +1,4 @@
+
 #include "Station.h"
 
 
@@ -36,7 +37,7 @@ namespace sict {
 
 	bool Station::pop(CustomerOrder& ready) {
 		ready = ordersQueue.front();
-		ordersQueue.pop();
+		ordersQueue.pop();   //remove
 		return hasAnOrderToRelease();
 	}
 

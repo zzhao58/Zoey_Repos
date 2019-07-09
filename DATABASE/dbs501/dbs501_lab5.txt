@@ -1,0 +1,227 @@
+
+---LAB5 by ZHI ZAHO------
+
+SET LINESIZE 130;
+SET PAGESIZE 130;
+SET SERVEROUTPUT ON
+SET VERIFY OFF
+
+--1-- 
+create or replace FUNCTION Get_Descr(P_SECTION_ID NUMBER) RETURN VARCHAR2
+IS
+    v_description VARCHAR2(50);
+BEGIN
+    SELECT DESCRIPTION
+    INTO v_description
+    FROM COURSE
+    INNER JOIN SECTION USING(COURSE_NO)
+    WHERE SECTION_ID=P_SECTION_ID;
+
+    RETURN 'Course Description for Section Id '||P_SECTION_ID||' is Intro to '||v_description;
+
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            RETURN('There is NO such Section id: '||P_SECTION_ID);
+
+END Get_Descr;
+	
+VARIABLE description VARCHAR2(100);
+
+EXECUTE :description := Get_Descr('150');
+EXECUTE :description := Get_Descr('999');
+-----------------------------
+--2--
+create or replace PROCEDURE show_bizdays(start_day date default sysdate,day_number number default 30)
+AS
+    weekday VARCHAR2(10);
+    day_count NUMBER(20):=0;
+    CURRENT_DAY DATE;
+
+    No_date EXCEPTION;
+BEGIN
+    IF start_day is NULL THEN
+        RAISE No_date;
+    END IF;
+
+    CURRENT_DAY:=start_day;
+    WHILE day_count < day_number
+    LOOP
+        IF (to_char(CURRENT_DAY,'DY') NOT IN ('SAT','SUN')) THEN
+            day_count:=day_count+1;
+            DBMS_OUTPUT.PUT_LINE('The index is : '||day_count||' and the table value is: '||to_char(CURRENT_DAY));
+        END IF;
+        CURRENT_DAY:=CURRENT_DAY+1;
+    END LOOP;
+
+    EXCEPTION 
+        WHEN No_date THEN
+            DBMS_OUTPUT.PUT_LINE('invalid date');
+END;
+
+EXECUTE show_bizdays(sysdate,10);
+EXECUTE show_bizdays(sysdate+7,10);
+
+-------------------------------------------------------------
+--(3)-- Lab5 Pakcage----
+
+CREATE OR REPLACE PACKAGE Lab5 AS 
+   FUNCTION Get_Descr(P_SECTION_ID NUMBER) RETURN VARCHAR2;
+   PROCEDURE show_bizdays(start_day date default sysdate,day_number number default 30);
+END Lab5; 
+
+
+CREATE OR REPLACE PACKAGE BODY Lab5 AS 
+  
+    FUNCTION Get_Descr(P_SECTION_ID NUMBER) RETURN VARCHAR2 IS
+        v_description VARCHAR2(50);
+    BEGIN
+        SELECT DESCRIPTION
+        INTO v_description
+        FROM COURSE
+        INNER JOIN SECTION USING(COURSE_NO)
+        WHERE SECTION_ID=P_SECTION_ID;
+    
+        RETURN 'Course Description for Section Id '||P_SECTION_ID||' is Intro to '||v_description;
+    
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                RETURN('There is NO such Section id: '||P_SECTION_ID);
+    
+    END Get_Descr;
+        
+    PROCEDURE show_bizdays(start_day date default sysdate,day_number number default 30) IS
+        weekday VARCHAR2(10);
+        day_count NUMBER(20):=0;
+        CURRENT_DAY DATE;
+    
+        No_date EXCEPTION;
+    BEGIN
+        IF start_day is NULL THEN
+            RAISE No_date;
+        END IF;
+    
+        CURRENT_DAY:=start_day;
+        WHILE day_count < day_number
+        LOOP
+            IF (to_char(CURRENT_DAY,'DY') NOT IN ('SAT','SUN')) THEN
+                day_count:=day_count+1;
+                DBMS_OUTPUT.PUT_LINE('The index is : '||day_count||' and the table value is: '||to_char(CURRENT_DAY));
+            END IF;
+            CURRENT_DAY:=CURRENT_DAY+1;
+        END LOOP;
+    
+        EXCEPTION 
+            WHEN No_date THEN
+                DBMS_OUTPUT.PUT_LINE('invalid date');
+    END show_bizdays;
+    
+END Lab5;
+
+SET SERVEROUTPUT ON
+SET AUTOPRINT ON
+SET VERIFY OFF
+
+--- invoke function and procedure
+VARIABLE description VARCHAR2(100);
+EXECUTE :description := Lab5.Get_Descr('150');
+EXECUTE :description := Lab5.Get_Descr('999');
+
+EXECUTE Lab5.show_bizdays(sysdate,30);
+EXECUTE Lab5.show_bizdays(sysdate+7,10);
+
+
+---------------------------------------
+----(4)----
+CREATE OR REPLACE PACKAGE Lab5 AS 
+   FUNCTION Get_Descr(P_SECTION_ID NUMBER) RETURN VARCHAR2;
+   PROCEDURE show_bizdays(start_day date default sysdate,day_number number default 30);
+END Lab5; 
+
+
+CREATE OR REPLACE PACKAGE BODY Lab5 AS 
+  
+    FUNCTION Get_Descr(P_SECTION_ID NUMBER) RETURN VARCHAR2 IS
+        v_description VARCHAR2(50);
+    BEGIN
+        SELECT DESCRIPTION
+        INTO v_description
+        FROM COURSE
+        INNER JOIN SECTION USING(COURSE_NO)
+        WHERE SECTION_ID=P_SECTION_ID;
+    
+        RETURN 'Course Description for Section Id '||P_SECTION_ID||' is Intro to '||v_description;
+    
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                RETURN('There is NO such Section id: '||P_SECTION_ID);
+    
+    END Get_Descr;
+        
+    PROCEDURE show_bizdays(start_day date ,day_number number) IS
+        weekday VARCHAR2(10);
+        day_count NUMBER(20):=0;
+        CURRENT_DAY DATE;
+    
+        No_date EXCEPTION;
+    BEGIN
+        IF start_day is NULL THEN
+            RAISE No_date;
+        END IF;
+    
+        CURRENT_DAY:=start_day;
+        WHILE day_count < day_number
+        LOOP
+            IF (to_char(CURRENT_DAY,'DY') NOT IN ('SAT','SUN')) THEN
+                day_count:=day_count+1;
+                DBMS_OUTPUT.PUT_LINE('The index is : '||day_count||' and the table value is: '||to_char(CURRENT_DAY));
+            END IF;
+            CURRENT_DAY:=CURRENT_DAY+1;
+        END LOOP;
+    
+        EXCEPTION 
+            WHEN No_date THEN
+                DBMS_OUTPUT.PUT_LINE('invalid date');
+    END show_bizdays;
+    
+     PROCEDURE show_bizdays(start_day date) IS
+        day_number number(2);
+        weekday VARCHAR2(10);
+        day_count NUMBER(20):=0;
+        CURRENT_DAY DATE;
+        
+        No_date EXCEPTION;
+    BEGIN
+        day_number:=&how_many_days;
+        IF start_day is NULL THEN
+            RAISE No_date;
+        END IF;
+    
+        CURRENT_DAY:=start_day;
+        WHILE day_count < day_number
+        LOOP
+            IF (to_char(CURRENT_DAY,'DY') NOT IN ('SAT','SUN')) THEN
+                day_count:=day_count+1;
+                DBMS_OUTPUT.PUT_LINE('The index is : '||day_count||' and the table value is: '||to_char(CURRENT_DAY));
+            END IF;
+            CURRENT_DAY:=CURRENT_DAY+1;
+        END LOOP;
+    
+        EXCEPTION 
+            WHEN No_date THEN
+                DBMS_OUTPUT.PUT_LINE('invalid date');
+    END show_bizdays;
+END Lab5;
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -3,6 +3,8 @@
 #include "LineManager.h"
 
 namespace sict {
+	LineManager::LineManager() {}
+
 	LineManager::LineManager(std::vector<Station*>& p_stations, std::vector<size_t>& p_nextStations, std::vector<CustomerOrder>& p_orders, size_t p_firstStation, std::ostream& os) {
 		stations = p_stations;
 		orders = p_orders;
@@ -20,32 +22,24 @@ namespace sict {
 	void LineManager::display(std::ostream& os) const {
 		
 		os << "COMPLETED ORDERS" << std::endl;
-		std::queue<CustomerOrder> completed = stations[lastStation]->ordersQueue;
-		while (!completed.empty()){
-			if (completed.front().isFilled()) {
-				completed.front().display(os, true);
-				completed.pop();
-			}			
-		}
+		for (auto& i : completed)
+			i.display(os, true);
 
-		os << "INCOMPLETE ORDERS" << std::endl;
-		std::queue<CustomerOrder> incomplete = stations[lastStation]->ordersQueue;
-		while (!incomplete.empty()) {
-			if (!incomplete.front().isFilled()) {
-				incomplete.front().display(os, true);
-				incomplete.pop();
-			}
-		}
-
+		os << "INCOMPLETED ORDERS" << std::endl;
+		for (auto& i : incomplete)
+			i.display(os, true);
 	}
 
 	bool LineManager::run(std::ostream& os) {
+		/*
 		std::vector<std::thread> threads;
 		for (size_t i = 0; i < stations.size(); i++) {
+			
 			threads.push_back(std::thread([&]() {
-				if (!stations[i]->ordersQueue.empty()) {
-					stations[i]->ordersQueue.front().fillItem(stations[i]->itemset,os);
-				}
+				
+				if (!stations[i]->ordersQueue.empty()) {    //use Si insteadof stations[i]
+					stations[i]->fill(os);
+				} 
 				
 				os << "--> " << stations[i]->ordersQueue.front().getNameProduct() << " moved from " << stations[i]->itemset.getName() << " to ";
 				if (i!=lastStation){
@@ -68,5 +62,37 @@ namespace sict {
 			thread.join();
 
 		return (stations[lastStation]->ordersQueue.size() == orders.size())? true:false;
+		*/
+
+		for_each(stations.begin(), stations.end(), [&](auto& si) { si->fill(os);} );
+		
+		CustomerOrder releasedOrder;
+		for (size_t i = 0; i < stations.size(); i++) {
+			if (stations[i]->hasAnOrderToRelease()) {
+				if (i != lastStation) {
+					stations[i]->pop(releasedOrder);
+					os << " --> " << releasedOrder.getNameProduct()
+						<< " moved from " + stations[i]->getName() << " to " << stations[nextStations[i]]->getName() << std::endl;
+					*stations[nextStations[i]] += std::move(releasedOrder);
+				}
+				else {
+					stations[i]->pop(releasedOrder);
+					if (releasedOrder.isFilled()) {
+						os << " --> " << releasedOrder.getNameProduct()
+						<< " moved from " + stations[i]->getName() << " to " << " Completed Set " << std::endl;
+						completed.push_back(std::move(releasedOrder));
+					}
+					else {
+						os << " --> " << releasedOrder.getNameProduct()
+						<< " moved from " + stations[i]->getName() << " to " << " Incomplete Set " << std::endl;
+						incomplete.push_back(std::move(releasedOrder));
+					}
+				}
+			}
+		}
+
+		size_t processed = completed.size() + incomplete.size();
+		return (processed == orders.size()) ? true : false;
+		
 	}
 }

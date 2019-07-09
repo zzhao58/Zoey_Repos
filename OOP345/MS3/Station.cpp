@@ -41,8 +41,8 @@ namespace sict {
 	}
 
 	void Station::validate(std::ostream& os) const {
-		os << "getName(): " << itemset.getName() << std::endl;
-		os << "getSerialNumber(): " << itemset.getSerialNumber() << std::endl;
-		os << "getQuantity(): " << itemset.getQuantity() << std::endl;
+		os << " getName(): " << itemset.getName() << std::endl;
+		os << " getSerialNumber(): " << itemset.getSerialNumber() << std::endl;
+		os << " getQuantity(): " << itemset.getQuantity() << std::endl;
 	}
 }

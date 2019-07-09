@@ -1,0 +1,639 @@
+----------Assignmnet 2 Gruop 9-----------
+
+ZHI ZHAO:
+
+Paul Jamieson:
+
+Graham Wilson:
+
+Haanee Hirji:
+--(1)---
+
+CREATE or REPLACE Procedure modify_sal(p_department_ID IN number)
+IS
+    cursor c_emp is
+    select employee_ID,FIRST_NAME,LAST_NAME, SALARY
+    from employees
+    where department_id = p_department_id
+    FOR UPDATE OF salary NOWAIT;
+    
+    v_avg_sal float;
+    FLAG char(1);
+    V_EMP_NUM number(10);
+    UPDATE_NUMBER PLS_INTEGER:=0;
+    EMPTY_DEPARTMENT EXCEPTION;
+BEGIN
+    SELECT 'Y' INTO FLAG
+    FROM DEPARTMENTS
+    WHERE DEPARTMENT_ID=p_department_ID;
+    
+    SELECT COUNT(*)
+    INTO V_EMP_NUM
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID=p_department_ID;
+    IF V_EMP_NUM = 0 THEN
+        RAISE EMPTY_DEPARTMENT;
+    END IF;
+    
+    SELECT AVG(SALARY) INTO v_avg_sal
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID = p_department_ID;
+    
+    FOR i in c_emp
+    loop
+        IF(i.SALARY<v_avg_sal) THEN
+            DBMS_OUTPUT.PUT_LINE('Employee '||i.FIRST_NAME||' '||i.LAST_NAME||' just got an increase of $'||to_char(v_avg_sal-i.SALARY));
+                        
+            UPDATE EMPLOYEES
+            SET SALARY=v_avg_sal
+            WHERE employee_ID = i.employee_ID; 
+            
+            UPDATE_NUMBER:=UPDATE_NUMBER+1;
+        END IF;    
+    end loop;
+    
+    IF UPDATE_NUMBER=0 THEN
+        DBMS_OUTPUT.PUT_LINE('No salary was modified in Department: '||to_char(p_department_ID));
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Total # of employees who received salary increase is: '||to_char(UPDATE_NUMBER));
+    END IF;
+    
+    EXCEPTION 
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('This Department Id is invalid: '||p_department_ID);
+        WHEN EMPTY_DEPARTMENT THEN
+            DBMS_OUTPUT.PUT_LINE('This Department is EMPTY: '||p_department_ID);
+END;
+
+EXECUTE modify_sal(99);
+This Department Id is invalid: 99
+
+EXECUTE modify_sal(190);
+This Department is EMPTY: 190
+
+EXECUTE modify_sal(10);
+No salary was modified in Department: 10
+
+EXECUTE modify_sal(110);
+Employee William Gietz just got an increase of $1850
+Total # of employees who received salary increase is: 1
+
+
+--(2)-------
+SET LINESIZE 120
+SET PAGESIZE 80
+SET FEEDBACK OFF 
+SET SERVEROUTPUT ON
+
+--VARIABLE b_studentId NUMBER
+--ACCEPT input NUMBER PROMPT 'Enter value: '
+--EXEC :b_studentId := &input
+
+
+
+create or replace FUNCTION Total_Cost (
+	p_studentId NUMBER)
+	return NUMBER
+IS
+	v_total_cost course.cost%TYPE := 0;
+	v_student_id student.student_id%TYPE;
+	v_enrolled_classes INTEGER(3);
+	e_not_enrolled EXCEPTION;
+	
+BEGIN
+	SELECT 	student_id
+	INTO	v_student_id
+	FROM	student
+	WHERE 	p_studentId = student_id;
+	
+	SELECT	COUNT(*)
+	INTO 	v_enrolled_classes
+	FROM	enrollment
+	WHERE	student_id = v_student_id;
+	
+	IF v_enrolled_classes = 0 THEN
+		RAISE e_not_enrolled;
+	END IF;
+	
+	SELECT 	SUM(c.cost)
+	INTO	v_total_cost
+	FROM	enrollment e
+	JOIN 	section s
+		ON	s.section_id = e.section_id
+	JOIN	course c
+		ON 	s.course_no = c.course_no
+	WHERE 	student_id = v_student_id;
+	
+	RETURN v_total_cost;
+EXCEPTION
+	WHEN e_not_enrolled THEN
+		RETURN 0;
+    WHEN NO_DATA_FOUND THEN 
+        RETURN -1; --Student does not exist
+END;
+/
+
+
+EXEC :b_studentId := 194
+EXEC DBMS_OUTPUT.PUT_LINE('Student_ID = ' || :b_studentId)
+EXEC DBMS_OUTPUT.PUT_LINE('Total cost of classes is :' || Total_Cost(:b_studentId))
+EXEC :b_studentId := 294
+EXEC DBMS_OUTPUT.PUT_LINE('Student_ID = ' || :b_studentId)
+EXEC DBMS_OUTPUT.PUT_LINE('Total cost of classes is :' || Total_Cost(:b_studentId))
+EXEC :b_studentId := 494
+EXEC DBMS_OUTPUT.PUT_LINE('Student_ID = ' || :b_studentId)
+EXEC DBMS_OUTPUT.PUT_LINE('Total cost of classes is :' || Total_Cost(:b_studentId))
+--------------------------------------------------------------------------------------------
+--(3)---
+CREATE OR REPLACE PACKAGE My_Pack IS
+
+Procedure modify_sal (
+	p_department_ID IN number);
+
+FUNCTION Total_Cost (
+	p_studentId NUMBER)
+	return NUMBER;
+
+END My_Pack;
+/
+
+CREATE OR REPLACE PACKAGE BODY My_Pack IS
+Procedure modify_sal(p_department_ID IN number)
+IS
+    cursor c_emp is
+    select employee_ID,FIRST_NAME,LAST_NAME, SALARY
+    from employees
+    where department_id = p_department_id
+    FOR UPDATE OF salary NOWAIT;
+    
+    v_avg_sal float;
+    FLAG char(1);
+    V_EMP_NUM number(10);
+    UPDATE_NUMBER PLS_INTEGER:=0;
+    EMPTY_DEPARTMENT EXCEPTION;
+BEGIN
+    SELECT 'Y' INTO FLAG
+    FROM DEPARTMENTS
+    WHERE DEPARTMENT_ID=p_department_ID;
+    
+    SELECT COUNT(*)
+    INTO V_EMP_NUM
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID=p_department_ID;
+    IF V_EMP_NUM = 0 THEN
+        RAISE EMPTY_DEPARTMENT;
+    END IF;
+    
+    SELECT AVG(SALARY) INTO v_avg_sal
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID = p_department_ID;
+    
+    FOR i in c_emp
+    loop
+        IF(i.SALARY<v_avg_sal) THEN
+            DBMS_OUTPUT.PUT_LINE('Employee '||i.FIRST_NAME||' '||i.LAST_NAME||' just got an increase of $'||to_char(v_avg_sal-i.SALARY));
+                        
+            UPDATE EMPLOYEES
+            SET SALARY=v_avg_sal
+            WHERE employee_ID = i.employee_ID; 
+            
+            UPDATE_NUMBER:=UPDATE_NUMBER+1;
+        END IF;    
+    end loop;
+    
+    IF UPDATE_NUMBER=0 THEN
+        DBMS_OUTPUT.PUT_LINE('No salary was modified in Department: '||to_char(p_department_ID));
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Total # of employees who received salary increase is: '||to_char(UPDATE_NUMBER));
+    END IF;
+    
+EXCEPTION 
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('This Department Id is invalid: '||p_department_ID);
+        WHEN EMPTY_DEPARTMENT THEN
+            DBMS_OUTPUT.PUT_LINE('This Department is EMPTY: '||p_department_ID);
+END modify_sal;
+
+FUNCTION Total_Cost (
+	p_studentId NUMBER)
+	return NUMBER
+IS
+	v_total_cost course.cost%TYPE := 0;
+	v_student_id student.student_id%TYPE;
+	v_enrolled_classes INTEGER(3);
+	e_not_enrolled EXCEPTION;
+	
+BEGIN
+	SELECT 	student_id
+	INTO	v_student_id
+	FROM	student
+	WHERE 	p_studentId = student_id;
+	
+	SELECT	COUNT(*)
+	INTO 	v_enrolled_classes
+	FROM	enrollment
+	WHERE	student_id = v_student_id;
+	
+	IF v_enrolled_classes = 0 THEN
+		RAISE e_not_enrolled;
+	END IF;
+	
+	SELECT 	SUM(c.cost)
+	INTO	v_total_cost
+	FROM	enrollment e
+	JOIN 	section s
+		ON	s.section_id = e.section_id
+	JOIN	course c
+		ON 	s.course_no = c.course_no
+	WHERE 	student_id = v_student_id;
+	
+	RETURN v_total_cost;
+EXCEPTION
+	WHEN e_not_enrolled THEN
+		RETURN 0;
+    WHEN NO_DATA_FOUND THEN 
+        RETURN -1; --Student does not exist
+END Total_Cost;
+
+END My_Pack;
+/
+
+VARIABLE id NUMBER;
+VARIABLE cost NUMBER;
+
+EXECUTE :id := 194;
+EXECUTE :cost := My_Pack.Total_Cost(:id);
+PRINT cost;
+
+COST
+----
+1195
+
+EXECUTE :id := 294;
+EXECUTE :cost := My_Pack.Total_Cost(:id);
+PRINT cost;
+
+COST
+----
+0
+
+EXECUTE :id := 494;
+EXECUTE :cost := My_Pack.Total_Cost(:id);
+PRINT cost;
+
+COST
+----
+-1
+
+--(4)--
+CREATE OR REPLACE PACKAGE My_Pack IS
+
+Procedure modify_sal (
+	p_department_ID IN number);
+
+FUNCTION Total_Cost (
+	p_studentId NUMBER)
+	return NUMBER;
+
+FUNCTION Total_Cost (
+	p_firstName STUDENT.FIRST_NAME%TYPE,
+	p_lastName STUDENT.LAST_NAME%TYPE)
+	return NUMBER;
+
+FUNCTION Total_Cost (
+	p_zipCode STUDENT.ZIP%TYPE)
+	return NUMBER;
+
+END My_Pack;
+/
+
+CREATE OR REPLACE PACKAGE BODY My_Pack IS
+Procedure modify_sal(p_department_ID IN number)
+IS
+    cursor c_emp is
+    select employee_ID,FIRST_NAME,LAST_NAME, SALARY
+    from employees
+    where department_id = p_department_id
+    FOR UPDATE OF salary NOWAIT;
+    
+    v_avg_sal float;
+    FLAG char(1);
+    V_EMP_NUM number(10);
+    UPDATE_NUMBER PLS_INTEGER:=0;
+    EMPTY_DEPARTMENT EXCEPTION;
+BEGIN
+    SELECT 'Y' INTO FLAG
+    FROM DEPARTMENTS
+    WHERE DEPARTMENT_ID=p_department_ID;
+    
+    SELECT COUNT(*)
+    INTO V_EMP_NUM
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID=p_department_ID;
+    IF V_EMP_NUM = 0 THEN
+        RAISE EMPTY_DEPARTMENT;
+    END IF;
+    
+    SELECT AVG(SALARY) INTO v_avg_sal
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID = p_department_ID;
+    
+    FOR i in c_emp
+    loop
+        IF(i.SALARY<v_avg_sal) THEN
+            DBMS_OUTPUT.PUT_LINE('Employee '||i.FIRST_NAME||' '||i.LAST_NAME||' just got an increase of $'||to_char(v_avg_sal-i.SALARY));
+                        
+            UPDATE EMPLOYEES
+            SET SALARY=v_avg_sal
+            WHERE employee_ID = i.employee_ID; 
+            
+            UPDATE_NUMBER:=UPDATE_NUMBER+1;
+        END IF;    
+    end loop;
+    
+    IF UPDATE_NUMBER=0 THEN
+        DBMS_OUTPUT.PUT_LINE('No salary was modified in Department: '||to_char(p_department_ID));
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Total # of employees who received salary increase is: '||to_char(UPDATE_NUMBER));
+    END IF;
+    
+    EXCEPTION 
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('This Department Id is invalid: '||p_department_ID);
+        WHEN EMPTY_DEPARTMENT THEN
+            DBMS_OUTPUT.PUT_LINE('This Department is EMPTY: '||p_department_ID);
+END modify_sal;
+
+FUNCTION Total_Cost (
+	p_studentId NUMBER)
+	return NUMBER
+IS
+	v_total_cost course.cost%TYPE := 0;
+	v_student_id student.student_id%TYPE;
+	v_enrolled_classes INTEGER(3);
+	e_not_enrolled EXCEPTION;
+	
+BEGIN
+	SELECT 	student_id
+	INTO	v_student_id
+	FROM	student
+	WHERE 	p_studentId = student_id;
+	
+	SELECT	COUNT(*)
+	INTO 	v_enrolled_classes
+	FROM	enrollment
+	WHERE	student_id = v_student_id;
+	
+	IF v_enrolled_classes = 0 THEN
+		RAISE e_not_enrolled;
+	END IF;
+	
+	SELECT 	SUM(c.cost)
+	INTO	v_total_cost
+	FROM	enrollment e
+	JOIN 	section s
+		ON	s.section_id = e.section_id
+	JOIN	course c
+		ON 	s.course_no = c.course_no
+	WHERE 	student_id = v_student_id;
+	
+	RETURN v_total_cost;
+EXCEPTION
+	WHEN e_not_enrolled THEN
+		RETURN 0;
+    WHEN NO_DATA_FOUND THEN 
+        RETURN -1; --Student does not exist
+END Total_Cost;
+
+FUNCTION Total_Cost (
+	p_firstName STUDENT.FIRST_NAME%TYPE,
+	p_lastName STUDENT.LAST_NAME%TYPE)
+	return NUMBER
+IS
+	v_total_cost course.cost%TYPE := 0;
+	v_student_id student.student_id%TYPE;
+	v_enrolled_classes INTEGER(3);
+	e_not_enrolled EXCEPTION;
+	
+BEGIN
+	SELECT 	student_id
+	INTO	v_student_id
+	FROM	student
+	WHERE 	UPPER(p_firstName) = UPPER(first_name)
+	AND 	UPPER(p_lastName) = UPPER(last_name);
+	
+	SELECT	COUNT(*)
+	INTO 	v_enrolled_classes
+	FROM	enrollment
+	WHERE	student_id = v_student_id;
+	
+	IF v_enrolled_classes = 0 THEN
+		RAISE e_not_enrolled;
+	END IF;
+	
+	SELECT 	SUM(c.cost)
+	INTO	v_total_cost
+	FROM	enrollment e
+	JOIN 	section s
+		ON	s.section_id = e.section_id
+	JOIN	course c
+		ON 	s.course_no = c.course_no
+	WHERE 	student_id = v_student_id;
+	
+	RETURN v_total_cost;
+EXCEPTION
+	WHEN e_not_enrolled THEN
+		RETURN 0;
+    WHEN NO_DATA_FOUND THEN 
+        RETURN -1; --Student does not exist
+END Total_Cost;
+
+FUNCTION Total_Cost (
+	p_zipCode STUDENT.ZIP%TYPE)
+	return NUMBER
+IS
+	v_total_cost course.cost%TYPE := 0;
+	v_cost course.cost%TYPE := 0;
+	v_student_id student.student_id%TYPE;
+	v_enrolled_classes INTEGER(3);
+	v_flag BOOLEAN := false;
+	e_not_enrolled EXCEPTION;
+	e_invalid_zip EXCEPTION;
+
+	CURSOR cStudent IS
+		SELECT	student_id
+		FROM	STUDENT
+		WHERE	ZIP = p_zipCode;
+BEGIN
+	FOR ind IN cStudent LOOP
+		v_flag := true;		
+
+		SELECT	COUNT(*)
+		INTO 	v_enrolled_classes
+		FROM	enrollment
+		WHERE	student_id = ind.student_id;
+
+		IF v_enrolled_classes = 0 THEN
+			CONTINUE;
+		END IF;
+
+		SELECT 	SUM(c.cost)
+		INTO	v_cost
+		FROM	enrollment e
+		JOIN 	section s
+			ON	s.section_id = e.section_id
+		JOIN	course c
+			ON 	s.course_no = c.course_no
+		WHERE 	student_id = ind.student_id;
+
+		v_total_cost := v_total_cost + v_cost;
+	END LOOP;
+
+	IF NOT v_flag THEN
+		RAISE e_invalid_zip; -- ZIP does not exist
+	END IF;
+
+	RETURN v_total_cost;
+EXCEPTION
+	WHEN e_not_enrolled THEN
+		RETURN 0;
+	WHEN e_invalid_zip THEN
+		RETURN -1;
+	WHEN OTHERS THEN 
+        	RETURN -2;
+END Total_Cost;
+
+END My_Pack;
+/
+
+VARIABLE zip VARCHAR2(5);
+VARIABLE fn VARCHAR2(25);
+VARIABLE ln VARCHAR2(25);
+VARIABLE cost NUMBER;
+
+EXECUTE :fn := 'VERONA';
+EXECUTE :ln := 'GRANT';
+EXECUTE :cost := My_Pack.Total_Cost(:fn, :ln);
+PRINT cost;
+
+COST
+----
+1195
+
+EXECUTE :fn := 'YVONNE';
+EXECUTE :ln := 'WINNICKI';
+EXECUTE :cost := My_Pack.Total_Cost(:fn, :ln);
+PRINT cost;
+
+COST
+----
+0
+
+EXECUTE :fn := 'PETER';
+EXECUTE :ln := 'PAN';
+EXECUTE :cost := My_Pack.Total_Cost(:fn, :ln);
+PRINT cost;
+
+COST
+----
+-1
+
+EXECUTE :zip := '07044';
+EXECUTE :cost := My_Pack.Total_Cost(:zip);
+PRINT cost;
+
+COST
+----
+1195
+
+EXECUTE :zip := '11209';
+EXECUTE :cost := My_Pack.Total_Cost(:zip);
+PRINT cost;
+
+COST
+----
+7070
+
+EXECUTE :zip := '11111';
+EXECUTE :cost := My_Pack.Total_Cost(:zip);
+PRINT cost;
+
+COST
+----
+-1
+
+---------------------------
+--(5)---
+CREATE OR REPLACE PROCEDURE MOD_GRADE(
+v_course NUMBER,
+v_grade NUMBER)
+
+IS
+
+v_existingCourse NUMBER;
+v_enrolNumber NUMBER;
+v_counter NUMBER := 0;
+
+CURSOR C_STUDENT IS SELECT * FROM ENROLLMENT 
+                    WHERE SECTION_ID IN (SELECT SECTION_ID 
+                                          FROM SECTION 
+                                          WHERE COURSE_NO = v_course);
+
+BEGIN
+
+SELECT COUNT(*) INTO v_existingCourse 
+FROM COURSE 
+WHERE COURSE_NO = v_course;
+
+IF v_existingCourse = 0 THEN
+  DBMS_OUTPUT.PUT_LINE('This Course Number is invalid: ' || v_course);
+ELSE 
+  IF v_grade > 100 OR v_grade < 0 THEN 
+    DBMS_OUTPUT.PUT_LINE('This Grade invalid: ' || v_grade ||' It must be between 0 and 100. Try again');
+  ELSE 
+    SELECT COUNT(*) INTO v_enrolNumber 
+    FROM ENROLLMENT 
+    WHERE SECTION_ID IN (SELECT SECTION_ID 
+                          FROM SECTION 
+                          WHERE COURSE_NO = v_course); 
+    IF v_enrolNumber = 0 THEN
+      DBMS_OUTPUT.PUT_LINE('This Course has NOBODY enrolled so far: ' || v_course);
+    ELSE 
+      FOR i IN C_STUDENT LOOP
+        UPDATE ENROLLMENT 
+        SET FINAL_GRADE = v_grade 
+        WHERE STUDENT_ID = i.STUDENT_ID AND SECTION_ID = i.SECTION_ID; 
+        v_counter := v_counter + 1;
+      END LOOP;
+      DBMS_OUTPUT.PUT_LINE('Total # of grades changed to ' || v_grade ||' for course number ' || v_course || ' is ' || v_counter);
+    END IF;
+  END IF;
+END IF;
+END MOD_GRADE;
+/
+Output:
+execute mod_grade(130,75)
+Total # of grades changed to 75 for course number 130 is 8
+
+PL/SQL procedure successfully completed.
+
+
+execute mod_grade(144,55)
+This Course has NOBODY enrolled so far: 144
+
+PL/SQL procedure successfully completed.
+
+
+execute mod_grade(99,55)
+This Course Number is invalid: 99
+
+PL/SQL procedure successfully completed.
+
+
+execute mod_grade(130,101)
+This Grade invalid: 101 It must be between 0 and 100. Try again
+
+PL/SQL procedure successfully completed.
+
+
+

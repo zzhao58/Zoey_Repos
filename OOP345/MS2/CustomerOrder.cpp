@@ -68,6 +68,8 @@ namespace sict {
 				os << " Filled " << CustomerName << " [" << ProductName << "][" << i->getName() << "][" << i->getserialNumber() << "]" << std::endl;
 			}
 			else if (!i->getIsFilled() && i->getName() == item.getName() && item.getQuantity() == 0) {
+				i->setserialNumber(0);
+				i->setIsFilled(false);
 				os << " Unable to Fill " << CustomerName << " [" << ProductName << "][" << i->getName() << "][" << i->getserialNumber() << "] out of stock" << std::endl;
 			}
 			else if ( i->getIsFilled() && i->getName() == item.getName()) {

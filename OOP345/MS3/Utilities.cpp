@@ -22,7 +22,7 @@ namespace sict {
 			}
 			
 			token = str.substr(next_pos, new_pos-next_pos);
-			next_pos = ++new_pos;	
+			next_pos = (new_pos!= std::string::npos)? ++new_pos : std::string::npos;
 
 			if (token.length() > field_width) {
 				field_width = token.length();

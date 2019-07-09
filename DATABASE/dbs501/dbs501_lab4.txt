@@ -1,0 +1,213 @@
+---dbs501 lab4 by zhi zhao-------
+--(1)--
+create or replace PROCEDURE MINE(v_month IN varchar2, v_objct_type IN varchar)
+IS
+    v_objct_type2 varchar(10);
+    v_last_date date;   --'2019-11-01'
+    v_DayWeek   varchar2(10);
+    v_count number(3);
+BEGIN
+    IF to_number(substr(v_month,1,2),'99')>12 THEN
+        RAISE invalid_number;
+    END IF;
+
+    IF upper(v_objct_type) NOT IN ('P','F','B') THEN
+        RAISE no_data_found;
+    END IF;
+
+    v_last_date:= LAST_DAY( TO_DATE( '20'||substr(v_month,4,2)||'-'||substr(v_month,1,2)||'-01' ,'YYYY-MM-DD'));
+    v_DayWeek:=TO_CHAR(v_last_date, 'DAY');
+    dbms_output.put_line('Last day of the month '||v_month||' is '||v_DayWeek);
+
+
+    v_objct_type2:=case UPPER(v_objct_type) 
+                    WHEN 'P' then 'PROCEDURE'
+                    WHEN 'F' then 'FUNCTION'
+                    WHEN 'B' then 'PACKAGE'
+                    ELSE          ''
+                   END; 
+
+    SELECT count(*)
+    INTO v_count
+    FROM User_PROCEDURES
+    where object_type=v_objct_type2;
+    dbms_output.put_line('Number of stored objects of type '|| UPPER(v_objct_type) ||' is '|| to_char(v_count));
+
+
+
+    EXCEPTION
+        WHEN invalid_number THEN
+            DBMS_OUTPUT.PUT_LINE('You have entered an Invalid FORMAT for the MONTH and YEAR. Try MM/YY.');
+        WHEN no_data_found THEN
+            DBMS_OUTPUT.PUT_LINE('You have entered an Invalid letter for the stored object. Try P, F or B');
+END;
+
+EXECUTE  mine ('11/09','P');
+PL/SQL procedure successfully completed.
+Last day of the month 11/09 is Monday   
+Number of stored objects of type P is 3
+
+EXECUTE  mine ('12/09','f');
+PL/SQL procedure successfully completed.
+Last day of the month 12/09 is Thursday 
+Number of stored objects of type F is 0
+
+EXECUTE  mine ('01/10','T');
+PL/SQL procedure successfully completed.
+Last day of the month 01/10 is Sunday   
+You have entered an Invalid letter for the stored object. Try P, F, B.
+
+EXECUTE  mine ('13/09','P');
+PL/SQL procedure successfully completed.
+You have entered an Invalid FORMAT for the MONTH and YEAR. Try MM/YY.*/
+ 
+--------------------------------------------------------
+---(2)----
+create or replace PROCEDURE add_zip(i_zip IN varchar2, i_city IN varchar2,i_state IN varchar2, o_status OUT varchar2, o_rownumber OUT number)
+AS
+    v_zip_count number(2);
+    
+    CURSOR c_state IS
+    SELECT ZIP, CITY, STATE, CREATED_BY, CREATED_DATE, MODIFIED_BY, MODIFIED_DATE
+    FROM ZIPCODE
+    WHERE STATE = i_state;
+BEGIN
+    SELECT count(*)
+    INTO v_zip_count
+    FROM ZIPCODE
+    WHERE ZIP = i_zip;
+
+    IF v_zip_count = 1 THEN
+        o_status:='FAILURE';
+    ELSE
+        INSERT INTO ZIPCODE(ZIP, CITY, STATE, CREATED_BY, CREATED_DATE, MODIFIED_BY, MODIFIED_DATE)
+        VALUES (i_zip,i_city,i_state,'dbs501_192a38',SYSDATE,'dbs501_192a38',SYSDATE);
+
+        o_status:='SUCCESS';
+    END IF;
+
+    SELECT count(*)
+    INTO o_rownumber
+    FROM ZIPCODE
+    WHERE STATE = i_state;
+    
+    DBMS_OUTPUT.PUT_LINE(' --------------------- FLAG ---------------------------- ');
+    DBMS_OUTPUT.PUT_LINE(o_status);
+    DBMS_OUTPUT.PUT_LINE(' --------------------- ZIPNUM --------------------------- ');
+    DBMS_OUTPUT.PUT_LINE('                                             '||o_rownumber);
+    
+    FOR zip_record IN c_state
+    LOOP
+        DBMS_OUTPUT.PUT_LINE(zip_record.ZIP||' '||zip_record.CITY||' '||zip_record.STATE||' '||zip_record.CREATED_BY||' '||zip_record.CREATED_DATE||' '||zip_record.MODIFIED_BY||' '||zip_record.MODIFIED_DATE);
+    END LOOP;
+
+    Rollback;
+END;
+-----
+VARIABLE flag VARCHAR2(10)
+VARIABLE zipnum NUMBER
+
+EXECUTE add_zip('18104', 'Chicago', 'MI', :zipnum, :flag)
+SELECT  * FROM zipcode WHERE  state = 'MI';
+ROLLBACK;
+
+EXECUTE add_zip('48104', 'Ann Arbor', 'MI', :zipnum, :flag)
+SELECT  * FROM zipcode WHERE  state = 'MI';
+
+
+
+-----------------
+--3--
+CREATE OR REPLACE PROCEDURE add_zip2 (i_zip IN varchar2, i_city IN varchar2,i_state IN varchar2, o_status OUT varchar2, o_rownumber OUT number)
+AS
+    CURSOR c_state IS
+    SELECT ZIP, CITY, STATE, CREATED_BY, CREATED_DATE, MODIFIED_BY, MODIFIED_DATE
+    FROM ZIPCODE
+    WHERE STATE = i_state;
+
+
+BEGIN
+    IF exist_zip(i_zip) THEN
+         o_status:='FAILURE';
+    ELSE
+        INSERT INTO ZIPCODE(ZIP, CITY, STATE, CREATED_BY, CREATED_DATE, MODIFIED_BY, MODIFIED_DATE)
+        VALUES (i_zip,i_city,i_state,'dbs501_192a38',SYSDATE,'dbs501_192a38',SYSDATE);
+
+        o_status:='SUCCESS';
+    END IF;
+
+    
+    SELECT count(*)
+    INTO o_rownumber
+    FROM ZIPCODE
+    WHERE STATE = i_state;
+    
+    DBMS_OUTPUT.PUT_LINE(' --------------------- FLAG ---------------------------- ');
+    DBMS_OUTPUT.PUT_LINE(o_status);
+    DBMS_OUTPUT.PUT_LINE(' --------------------- ZIPNUM --------------------------- ');
+    DBMS_OUTPUT.PUT_LINE('                                             '||o_rownumber);
+    
+    FOR zip_record IN c_state
+    LOOP
+        DBMS_OUTPUT.PUT_LINE(zip_record.ZIP||' '||zip_record.CITY||' '||zip_record.STATE||' '||zip_record.CREATED_BY||' '||zip_record.CREATED_DATE||' '||zip_record.MODIFIED_BY||' '||zip_record.MODIFIED_DATE);
+    END LOOP;
+
+
+VARIABLE flag VARCHAR2(10)
+VARIABLE zipnum NUMBER
+
+EXECUTE add_zip2('18104', 'Chicago', 'MI', :zipnum, :flag)
+SELECT  * FROM zipcode WHERE  state = 'MI';
+ROLLBACK;
+
+EXECUTE add_zip2('48104', 'Ann Arbor', 'MI', :zipnum, :flag)
+SELECT  * FROM zipcode WHERE  state = 'MI';
+ROLLBACK;
+
+--------------------
+(4)
+CREATE OR REPLACE FUNCTION instruct_status(i_first_name VARCHAR2, i_last_name VARCHAR2) RETURN VARCHAR2 
+IS
+    V_COUNT NUMBER(2);
+    P_FIRST_NAME VARCHAR2(20);
+    P_LAST_NAME VARCHAR2(20);
+    COUNT_NUMBER NUMBER(2);
+    status varchar2(50);
+
+BEGIN
+    SELECT COUNT(*)
+    INTO V_COUNT
+    FROM INSTRUCTOR
+    WHERE UPPER(FIRST_NAME)=UPPER(i_first_name)
+    AND UPPER(LAST_NAME)=UPPER(i_last_name);
+    
+    IF V_COUNT = 1 THEN
+        SELECT COUNT(S.SECTION_ID)
+        INTO COUNT_NUMBER
+        FROM INSTRUCTOR I
+        INNER JOIN SECTION S ON I.INSTRUCTOR_ID = S.INSTRUCTOR_ID
+        WHERE UPPER(I.FIRST_NAME)=UPPER(i_first_name)
+        AND UPPER(I.LAST_NAME)=UPPER(i_last_name);
+        
+        status:= CASE 
+                    WHEN COUNT_NUMBER=0 THEN 'TThis Instructor is NOT scheduled to teach '
+                    WHEN COUNT_NUMBER>9 THEN 'This Instructor will teach '||V_COUNT||' course and needs a vacation '
+                    ELSE                     'This Instructor will teach '||V_COUNT||' courses. '
+                  END ;
+    ELSE
+        status:='There is NO such instructor';
+    END IF;  
+    
+    RETURN status;
+    
+END;
+
+VARIABLE message VARCHAR2(100);
+
+SELECT last_name, INSTRUCT_STATUS(FIRST_NAME, LAST_NAME) "Instructor_Status"
+FROM INSTRUCTOR
+ORDER by LAST_NAME;
+
+EXECUTE :message := instruct_status('Peter', 'Pan');
+EXECUTE :message := instruct_status('Irene', 'Willig');
+

@@ -1,0 +1,171 @@
+--LAB3 BY ZHI ZHAO
+--1)A)
+SET SERVEROUT ON
+SET VERIFY OFF
+
+
+DECLARE
+    i number(2):=1;
+    
+    CURSOR cur_course IS
+    SELECT description
+    FROM course
+    WHERE PREREQUISITE IS NULL;
+
+    row_course cur_course%ROWTYPE;
+
+BEGIN
+    OPEN cur_course;
+
+    LOOP
+        FETCH cur_course INTO row_course;
+        EXIT WHEN cur_course%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE('Course Description :'||to_char(i)||':'|| row_course.description );
+        
+        i:=i+1;
+    END LOOP;
+    CLOSE cur_course;
+    DBMS_OUTPUT.PUT_LINE('****************************************************' );
+    DBMS_OUTPUT.PUT_LINE('Total # of Courses without the Prerequisite is: '||to_char(i-1) );  
+END;
+---------------------------------------
+--2)
+SET SERVEROUTPUT ON
+SET VERIFY OFF
+
+DECLARE
+   
+   i PLS_INTEGER:=1;
+   
+   TYPE course_table_type IS TABLE OF
+   course.description%TYPE INDEX BY PLS_INTEGER;
+   
+   vt_course_table course_table_type;
+   
+   CURSOR c_course_desc IS 
+   SELECT DESCRIPTION
+   FROM COURSE
+   WHERE PREREQUISITE IS NULL
+   ORDER BY DESCRIPTION;   
+   
+BEGIN  
+    FOR v_course IN c_course_desc
+    LOOP
+        vt_course_table(i):= v_course.DESCRIPTION;
+        i:=i+1;
+    END LOOP;
+ 
+    FOR i IN vt_course_table.FIRST..vt_course_table.LAST
+    LOOP                                                                                                                                                                                                                   
+        DBMS_OUTPUT.PUT_LINE('Course Description : '||i||':'||vt_course_table(i));
+    END LOOP;
+ 
+END;
+--------------------------------------
+--3--
+SET SERVEROUTPUT ON
+SET VERIFY OFF
+
+ACCEPT inputzip PROMPT 'INPUT FIRST 3 DIGITAL';
+DECLARE
+    v_inputzip varchar2(3) :='&inputzip';
+    
+    CURSOR cur_zip IS
+    SELECT ZIP, COUNT(distinct STUDENT_ID) AS STUDENTS_NUM
+    FROM STUDENT
+	WHERE ZIP LIKE v_inputzip ||'%'
+    GROUP BY ZIP
+    ORDER BY ZIP;
+    
+    rec_zip cur_zip%rowtype;
+
+    zip_count pls_integer:=0;
+    stu_count pls_integer:=0;
+BEGIN
+    OPEN cur_zip;
+    LOOP
+        FETCH cur_zip INTO rec_zip;
+        EXIT WHEN cur_zip%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE('Zip code :'|| rec_zip.ZIP||' has exactly '|| rec_zip.STUDENTS_NUM|| ' students enrolled. ');
+        zip_count:=zip_count+1;
+        stu_count:=stu_count+rec_zip.STUDENTS_NUM;
+    END LOOP;
+    CLOSE cur_zip;
+    
+    IF stu_count>0 THEN
+        DBMS_OUTPUT.PUT_LINE('************************************');
+        DBMS_OUTPUT.PUT_LINE('Total # of zip codes under '||v_inputzip||' is '||to_char(zip_count));
+        DBMS_OUTPUT.PUT_LINE('Total # of Students under zip code '||v_inputzip||' is '||to_char(stu_count));
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('This zip area is student empty. Please, try again.');
+    END IF;
+    
+END;
+--------------------------------
+--4--
+SET SERVEROUTPUT ON
+SET VERIFY OFF
+
+ACCEPT inputzip PROMPT 'INPUT FIRST 3 DIGITAL';
+DECLARE
+    v_inputzip varchar2(3):='&inputzip';
+    i pls_integer:=1;
+    
+    CURSOR cur_zip IS
+    SELECT Z.ZIP, COUNT(distinct S.STUDENT_ID) AS STUDENTS_NUM
+    FROM ZIPCODE Z
+    INNER JOIN STUDENT S ON Z.ZIP=S.ZIP
+    WHERE z.zip like v_inputzip||'%'
+    GROUP BY Z.ZIP;
+ 
+    TYPE zip_table_type IS TABLE OF
+        cur_zip%ROWTYPE INDEX BY PLS_INTEGER;
+    v_zip_record zip_table_type;
+    
+    zip_count pls_integer:=0;
+    stu_count pls_integer:=0;
+     
+ BEGIN
+    FOR record_zip IN cur_zip
+    LOOP
+        v_zip_record(i):=record_zip;
+		
+         DBMS_OUTPUT.PUT_LINE('Zip code :'|| v_zip_record(i).ZIP||' has exactly '|| v_zip_record(i).STUDENTS_NUM|| ' students enrolled. ');
+		 
+        zip_count:=zip_count+1;
+        stu_count:=stu_count + v_zip_record(i).STUDENTS_NUM;
+        i:=i+1;     
+    END LOOP;
+    
+    IF stu_count>0 THEN
+        DBMS_OUTPUT.PUT_LINE('************************************');
+        DBMS_OUTPUT.PUT_LINE('Total # of zip codes under '||v_inputzip||' is '||to_char(zip_count));
+        DBMS_OUTPUT.PUT_LINE('Total # of Students under zip code '||v_inputzip||' is '||to_char(stu_count));
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('This zip area is student empty. Please, try again.');
+    END IF;
+    
+     
+END;
+
+----------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

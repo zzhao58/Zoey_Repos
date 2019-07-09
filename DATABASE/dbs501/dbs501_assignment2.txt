@@ -1,0 +1,58 @@
+----------Assignmnet 2 ZHI ZHAO-----------
+--(1)---
+
+CREATE or REPLACE Procedure modify_sal(p_department_ID IN number)
+IS
+    cursor c_emp is
+    select employee_ID,FIRST_NAME,LAST_NAME, SALARY
+    from employees
+    where department_id = p_department_id
+    FOR UPDATE OF salary NOWAIT;
+    
+    v_avg_sal float;
+    FLAG char(1);
+    V_EMP_NUM number(10);
+    UPDATE_NUMBER PLS_INTEGER:=0;
+    EMPTY_DEPARTMENT EXCEPTION;
+BEGIN
+    SELECT 'Y' INTO FLAG
+    FROM DEPARTMENTS
+    WHERE DEPARTMENT_ID=p_department_ID;
+    
+    SELECT COUNT(*)
+    INTO V_EMP_NUM
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID=p_department_ID;
+    IF V_EMP_NUM = 0 THEN
+        RAISE EMPTY_DEPARTMENT;
+    END IF;
+    
+    SELECT AVG(SALARY) INTO v_avg_sal
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID = p_department_ID;
+    
+    FOR i in c_emp
+    loop
+        IF(i.SALARY<v_avg_sal) THEN
+            DBMS_OUTPUT.PUT_LINE('Employee '||i.FIRST_NAME||' '||i.LAST_NAME||' just got an increase of $'||to_char(v_avg_sal-i.SALARY));
+                        
+            UPDATE EMPLOYEES
+            SET SALARY=v_avg_sal
+            WHERE employee_ID = i.employee_ID; 
+            
+            UPDATE_NUMBER:=UPDATE_NUMBER+1;
+        END IF;    
+    end loop;
+    
+    IF UPDATE_NUMBER=0 THEN
+        DBMS_OUTPUT.PUT_LINE('No salary was modified in Department: '||to_char(p_department_ID));
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Total # of employees who received salary increase is: '||to_char(UPDATE_NUMBER));
+    END IF;
+    
+    EXCEPTION 
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('This Department Id is invalid: '||p_department_ID);
+        WHEN EMPTY_DEPARTMENT THEN
+            DBMS_OUTPUT.PUT_LINE('This Department is EMPTY: '||p_department_ID);
+END;
