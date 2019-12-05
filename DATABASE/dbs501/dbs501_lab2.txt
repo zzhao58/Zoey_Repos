@@ -54,6 +54,16 @@ BEGIN
         ELSE 
             'Instructor, '||  v_instructor_first_name||' '||v_instructor_last_name|| ' teaches '|| v_num_course ||' section(s). This instructor may teach more sections.'
         END;
+	
+	CASE
+        WHEN v_num_course=10 THEN 
+            v_message :='Instructor, '|| v_instructor_first_name||' '||v_instructor_last_name|| ' teaches '|| v_num_course ||' section(s). This instructor needs to rest in the next term.'
+        WHEN v_num_course=9 THEN 
+            v_message :='Instructor, '|| v_instructor_first_name||' '||v_instructor_last_name|| ' teaches '|| v_num_course ||' section(s). This instructor teaches enough sections.'
+        ELSE 
+            v_message :='Instructor, '||  v_instructor_first_name||' '||v_instructor_last_name|| ' teaches '|| v_num_course ||' section(s). This instructor may teach more sections.'
+    END;
+		
     DBMS_OUTPUT.PUT_LINE(v_message);
 
     EXCEPTION
@@ -68,7 +78,7 @@ ACCEPT inputval  PROMPT 'Please enter a Positive Integer: ';
 DECLARE
     INPUTVALUE NUMBER(5):=&inputval;
     TOTAL NUMBER(10):=0;
-    i NUMBER(5);
+    i NUMBER(5);        //which postion start.
 
 BEGIN
     IF MOD(INPUTVALUE,2) = 0 THEN
